@@ -22,6 +22,35 @@ class Renderer: NSObject, MTKViewDelegate{
     
     func draw(in view: MTKView){
         print("Draw requested!")
+        
+        guard let event = completionEvent else {
+            print("Draw skipped: completion event unavailable")
+            return
+        }
+        
+        if let pendingValue = lastSubmittedValue {
+            if event.signaledValue < pendingValue {
+                print("Draw skipped: GPU still busy")
+                return
+            }
+        }
+        
+        print("Frame slot available")
+        
+        guard view.drawableSize.width > 0,
+              view.drawableSize.height > 0 else {
+            print("Frame skipped: zero drawable size")
+            return
+        }
+        
+        guard let passDescriptor = view.currentRenderPassDescriptor,
+              let drawable = view.currentDrawable else {
+            print("Frame skipped drawable or pass unavailable")
+            return
+        }
+        
+        print("Drawable: \(drawable.texture.width) * \(drawable.texture.height)")
+        print("Color target exists: \(passDescriptor.colorAttachments[0].texture != nil)")
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
