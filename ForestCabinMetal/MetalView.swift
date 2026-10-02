@@ -12,13 +12,29 @@ import MetalKit
 struct MetalView : NSViewRepresentable {
     
     func makeNSView(context: Context) -> MTKView{
-        let MetalView = MTKView(frame: .zero, device: MTLCreateSystemDefaultDevice())
-        MetalView.isPaused = false
-        MetalView.preferredFramesPerSecond = 1
-        MetalView.enableSetNeedsDisplay = false
-        print("MTKView created!")
-        MetalView.delegate = context.coordinator
-        return MetalView
+        let view = MTKView(
+            frame: .zero,
+            device: MTLCreateSystemDefaultDevice()
+        )
+        
+        view.isPaused = true
+        view.enableSetNeedsDisplay = false
+        view.preferredFramesPerSecond = 1
+        view.delegate = context.coordinator
+        
+        guard let device = view.device else{
+            print("Cannot prepare renderer: no Metal device.")
+            return view
+        }
+        
+        do {
+            try context.coordinator.prepare(device: device)
+            view.isPaused = false
+        } catch {
+            print("Cannot prepare renderer: \(error)")
+        }
+        
+        return view
     }
     
     func updateNSView(_ nsView: MTKView, context: Context){}
