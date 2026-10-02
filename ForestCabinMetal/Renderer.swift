@@ -10,9 +10,15 @@ import MetalKit
 
 enum RendererSetupError: Error{
     case commandBufferCreationFailed
+    case sharedEventCreationFailed
 }
 
 class Renderer: NSObject, MTKViewDelegate{
+    
+    private var completionEvent: (any MTLSharedEvent)?
+    private var lastSubmittedValue: UInt64? = nil
+    private var commandBuffer: (any MTL4CommandBuffer)?
+    private var commandAllocator: (any MTL4CommandAllocator)?
     
     func draw(in view: MTKView){
         print("Draw requested!")
@@ -50,8 +56,13 @@ class Renderer: NSObject, MTKViewDelegate{
         self.commandAllocator = allocator
         
         print("Command storage ready")
+        
+        guard let event = device.makeSharedEvent() else {
+            throw RendererSetupError.sharedEventCreationFailed
+        }
+        
+        self.completionEvent = event
+        
+        print("Completion tracking ready; no submitted frame")
     }
-    
-    private var commandBuffer: (any MTL4CommandBuffer)?
-    private var commandAllocator: (any MTL4CommandAllocator)?
 }
