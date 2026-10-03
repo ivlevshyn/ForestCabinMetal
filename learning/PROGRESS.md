@@ -2,29 +2,29 @@
 
 ## Learner and environment
 
-- Swift experience: knows Swift; refine only if useful.
+- Swift experience: learning Swift syntax alongside Metal; explain unfamiliar syntax.
 - Graphics experience at course start: none.
 - Project: interactive forest cabin diorama.
-- Teaching preference: explain and guide; learner writes code; hints before solutions.
-- Mac chip: not recorded yet.
-- RAM: not recorded yet.
-- macOS version: not recorded yet.
-- Xcode / SDK version: not recorded yet.
-- Deployment target: macOS 26+ baseline; confirm exact installed SDK in lesson 01.
-+- Metal 4 support check: not recorded yet; verify before beginning GPU work.
-- Repository URL / branch: not recorded yet.
-- App host choice: not recorded yet.
-- Math comfort: discuss just in time, without requiring prior study.
+- Teaching preference: learner implements the app; explain APIs and Swift syntax with code snippets. Use larger, coherent coding steps with focused understanding checks.
+- Mac chip: Apple M5 Max (learner-reported).
+- RAM: 48 GB (learner-reported).
+- macOS version: 27.0.1 (learner-reported).
+- Xcode / SDK version: Xcode 27 / macOS SDK 27 (learner-reported).
+- Deployment target: project configured for macOS 27.0; course baseline remains macOS 26+.
+- Metal 4 support check: runtime diagnostic reported Apple M5 Max and supportsFamily(.metal4) == true.
+- Repository URL / branch: https://github.com/ivlevshyn/ForestCabinMetal / main.
+- App host choice: SwiftUI with MTKView embedded through NSViewRepresentable; Renderer retained as coordinator.
+- Math comfort: vectors and matrices familiar from Math and Calculus lectures; no prior graphics application.
 
 ## Current position
 
 - Current lesson: 01.
-- Current task: not started.
-- Last reviewed code SHA: none.
-- Current code SHA: none supplied.
-- Next action: establish the environment and begin task 01.1.
+- Current task: 01.1–01.6 complete; paused after final review.
+- Last reviewed code SHA: ecaa90797bcfbb48951a23217d1b189298e73ff5.
+- Current code SHA: ecaa90797bcfbb48951a23217d1b189298e73ff5 (this progress-only update does not change the reviewed implementation).
+- Next action: wait for the learner to request lesson 02; do not begin it yet.
 - Current blocker: none known.
-- Runtime evidence location: none yet.
+- Runtime evidence location: learner reports in the teaching conversation; no screenshot or GPU capture committed.
 
 ## Review ledger
 
@@ -32,7 +32,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 | ID | Lesson | Status | Reviewed code SHA | Review date / evidence note |
 | --- | --- | --- | --- | --- |
-| 01 | Your first Metal 4 frame | Not started | — | — |
+| 01 | Your first Metal 4 frame | Complete | ecaa90797bcfbb48951a23217d1b189298e73ff5 | 2026-10-03: source reviewed; learner reported colored output, color variation, resize/minimize/restore, skipped submission, and successful restoration. Reviewer did not execute Metal. |
 | 02 | A triangle and the graphics pipeline | Not started | — | — |
 | 03 | Send geometry from Swift to the GPU | Not started | — | — |
 | 04 | Move geometry with transforms and time | Not started | — | — |
@@ -67,17 +67,25 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 ## Concepts to reinforce
 
-No gaps recorded yet. Add short observations after lessons, such as “need one more example of view versus model transforms.” Remove or mark resolved when demonstrated; do not let this become a permanent list of mistakes.
+- Lesson 01: ownership versus GPU completion clarified. Retaining the drawable keeps its texture alive while GPU work uses it; completion gates release and allocator reset. Learner correctly chose to retain the reference while completion is pending.
+- Recording, submission, and presentation were distinguished: the encoder records into the buffer, queue commit submits for GPU execution, and drawable presentation requests display. Reinforce these distinctions naturally in future practice.
 
 ## Decisions and adaptations
 
 | Date | Decision | Reason / affected lessons |
 | --- | --- | --- |
 | Edition 2 | Metal 4 from lesson 01 through the entire course | Explicit learner preference; replaces edition 1 |
+| 2026-10-03 | Larger related coding steps with explained snippets | Learner requested more coding per step and explicit Swift/Metal examples. Preserve teacher-first practice and learner implementation. |
 
 ## Latest session handoff
 
-No teaching session has begun. Use [the session template](templates/SESSION.md) when pausing midway. Preserve the next concrete exercise, observed result, and unresolved question rather than copying a transcript.
+Lesson 01 is Complete at code commit ecaa90797bcfbb48951a23217d1b189298e73ff5. Final review inspected Renderer.swift, MetalView.swift, and the lifetime-fix diff against 5d297b5e4499e18ea79920ef2581a420e4f944ef. No blocking source findings remained.
+
+The app records a clear-only Metal 4 pass, attaches view/layer residency sets to one queue, retains the submitted drawable, presents it using queue drawable coordination, and signals an increasing shared-event value. The one-slot completion gate precedes drawable release and allocator reset; skipped callbacks do not create pending submissions. GPU feedback errors are printed.
+
+The learner reported expected colored output, successful resize/minimize/restore, a clear-color change, an experiment recording without submission, and normal rendering after restoring submission. These are learner-provided runtime observations, not reviewer-executed verification. No timing or validation-enabled capture was supplied.
+
+Pause here as requested. Lesson 02 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before assigning the next task.
 
 ## Performance baseline
 
