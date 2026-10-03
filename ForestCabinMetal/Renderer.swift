@@ -30,8 +30,7 @@ class Renderer: NSObject, MTKViewDelegate{
             print("Draw skipped: completion event unavailable")
             return
         }
-        
-        inFlightDrawable = nil
+
         
         if let pendingValue = lastSubmittedValue {
             if event.signaledValue < pendingValue {
@@ -39,6 +38,8 @@ class Renderer: NSObject, MTKViewDelegate{
                 return
             }
         }
+        
+        inFlightDrawable = nil
         
         print("Frame slot available")
         
@@ -68,7 +69,7 @@ class Renderer: NSObject, MTKViewDelegate{
         colorTarget.loadAction = .clear
         colorTarget.storeAction = .store
         colorTarget.clearColor = MTLClearColor(
-            red: 0.15, green: 0.35, blue: 0.55, alpha: 1.0
+            red: 0.16, green: 0.35, blue: 0.55, alpha: 1.0
         )
         
         allocator.reset()
@@ -76,6 +77,7 @@ class Renderer: NSObject, MTKViewDelegate{
         
         guard let encoder = buffer.makeRenderCommandEncoder(descriptor: passDescriptor, options: []) else {
             buffer.endCommandBuffer()
+            
             print("Frame skipped: render encoder unavailable")
             return
         }
@@ -83,6 +85,12 @@ class Renderer: NSObject, MTKViewDelegate{
         encoder.label = "Sky clear pass"
         encoder.endEncoding()
         buffer.endCommandBuffer()
+        
+//        let skipSubmission = true
+//        if skipSubmission{
+//            print("Experiment:recorded but not submitted")
+//            return
+//        }
         
         let submissionValue = (lastSubmittedValue ?? 0) + 1
         
