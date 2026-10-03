@@ -7,10 +7,12 @@
 
 import Foundation
 import MetalKit
+import QuartzCore
 
 enum RendererSetupError: Error{
     case commandBufferCreationFailed
     case sharedEventCreationFailed
+    case metalLayerUnavailable
 }
 
 class Renderer: NSObject, MTKViewDelegate{
@@ -43,7 +45,7 @@ class Renderer: NSObject, MTKViewDelegate{
             return
         }
         
-        guard let passDescriptor = view.currentRenderPassDescriptor,
+        guard let passDescriptor = view.currentMTL4RenderPassDescriptor,
               let drawable = view.currentDrawable else {
             print("Frame skipped drawable or pass unavailable")
             return
@@ -51,6 +53,34 @@ class Renderer: NSObject, MTKViewDelegate{
         
         print("Drawable: \(drawable.texture.width) * \(drawable.texture.height)")
         print("Color target exists: \(passDescriptor.colorAttachments[0].texture != nil)")
+        
+        guard let buffer = commandBuffer,
+              let allocator = commandAllocator else {
+            print("Frame skipped: command storage unavailable")
+            return
+        }
+        
+        let colorTarget = passDescriptor.colorAttachments[0]!
+        colorTarget.loadAction = .clear
+        colorTarget.storeAction = .store
+        colorTarget.clearColor = MTLClearColor(
+            red: 0.15, green: 0.35, blue: 0.55, alpha: 1.0
+        )
+        
+        allocator.reset()
+        buffer.beginCommandBuffer(allocator: allocator)
+        
+        guard let encoder = buffer.makeRenderCommandEncoder(descriptor: passDescriptor, options: []) else {
+            buffer.endCommandBuffer()
+            print("Frame skipped: render encoder unavailable")
+            return
+        }
+        
+        encoder.label = "Sky clear pass"
+        encoder.endEncoding()
+        buffer.endCommandBuffer()
+        
+        print("Clear pass recorded")
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -59,7 +89,7 @@ class Renderer: NSObject, MTKViewDelegate{
     
     private var commandQueue: (any MTL4CommandQueue)?
     
-    func prepare(device: any MTLDevice) throws {
+    func prepare(device: any MTLDevice, view: MTKView) throws {
         
         let descriptor = MTL4CommandQueueDescriptor()
         descriptor.label = "Forest cabin queue"
@@ -93,5 +123,17 @@ class Renderer: NSObject, MTKViewDelegate{
         self.completionEvent = event
         
         print("Completion tracking ready; no submitted frame")
+        
+        let queue = try device.makeMTL4CommandQueue(
+            descriptor: descriptor
+        )
+        
+        guard let layer = view.layer as? CAMetalLayer else {
+            throw RendererSetupError.metalLayerUnavailable
+        }
+        
+        queue.addResidencySet(view.residencySet)
+        queue.addResidencySet(layer.residencySet)
+        self.commandQueue = queue
     }
 }

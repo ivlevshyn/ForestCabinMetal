@@ -28,7 +28,7 @@ struct MetalView : NSViewRepresentable {
         }
         
         do {
-            try context.coordinator.prepare(device: device)
+            try context.coordinator.prepare(device: device, view: view)
             view.isPaused = false
         } catch {
             print("Cannot prepare renderer: \(error)")
