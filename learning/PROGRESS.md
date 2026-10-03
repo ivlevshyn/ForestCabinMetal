@@ -18,11 +18,11 @@
 
 ## Current position
 
-- Current lesson: 01.
-- Current task: 01.1–01.6 complete; paused after final review.
-- Last reviewed code SHA: ecaa90797bcfbb48951a23217d1b189298e73ff5.
-- Current code SHA: ecaa90797bcfbb48951a23217d1b189298e73ff5 (this progress-only update does not change the reviewed implementation).
-- Next action: wait for the learner to request lesson 02; do not begin it yet.
+- Current lesson: 02.
+- Current task: 02.1–02.5 complete; paused after final review.
+- Last reviewed code SHA: 826145a5387295f40dd314be31b9356057ce07c1.
+- Current code SHA: 826145a5387295f40dd314be31b9356057ce07c1 (this progress-only update does not change the reviewed implementation).
+- Next action: wait for the learner to request lesson 03; do not begin it yet.
 - Current blocker: none known.
 - Runtime evidence location: learner reports in the teaching conversation; no screenshot or GPU capture committed.
 
@@ -33,7 +33,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | ID | Lesson | Status | Reviewed code SHA | Review date / evidence note |
 | --- | --- | --- | --- | --- |
 | 01 | Your first Metal 4 frame | Complete | ecaa90797bcfbb48951a23217d1b189298e73ff5 | 2026-10-03: source reviewed; learner reported colored output, color variation, resize/minimize/restore, skipped submission, and successful restoration. Reviewer did not execute Metal. |
-| 02 | A triangle and the graphics pipeline | Not started | — | — |
+| 02 | A triangle and the graphics pipeline | Complete | 826145a5387295f40dd314be31b9356057ce07c1 | 2026-10-03: source and baseline diff reviewed; learner reported expected lesson behavior and confirmed the requested Xcode GPU-debug capture checks. Understanding answers reviewed with clarifications. Reviewer did not execute Metal. |
 | 03 | Send geometry from Swift to the GPU | Not started | — | — |
 | 04 | Move geometry with transforms and time | Not started | — | — |
 | 05 | Enter 3D with perspective and depth | Not started | — | — |
@@ -70,6 +70,8 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 - Lesson 01: ownership versus GPU completion clarified. Retaining the drawable keeps its texture alive while GPU work uses it; completion gates release and allocator reset. Learner correctly chose to retain the reference while completion is pending.
 - Recording, submission, and presentation were distinguished: the encoder records into the buffer, queue commit submits for GPU execution, and drawable presentation requests display. Reinforce these distinctions naturally in future practice.
 
+- Lesson 02: vertex shaders supply corner positions and colors; rasterization determines coverage and interpolates values; fragment shaders calculate output colors. W = 1 leaves coordinates unchanged during perspective division. Reinforce that pipeline creation belongs in preparation to reuse compiled state and avoid per-frame compilation, rather than merely because the state must exist before drawing.
+
 ## Decisions and adaptations
 
 | Date | Decision | Reason / affected lessons |
@@ -80,13 +82,17 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 ## Latest session handoff
 
-Lesson 01 is Complete at code commit ecaa90797bcfbb48951a23217d1b189298e73ff5. Final review inspected Renderer.swift, MetalView.swift, and the lifetime-fix diff against 5d297b5e4499e18ea79920ef2581a420e4f944ef. No blocking source findings remained.
+Lesson 02 is Complete at code commit 826145a5387295f40dd314be31b9356057ce07c1, reviewed against baseline 390f37ddc7333d352a83aab678b41e63f5019540. Review inspected Renderer.swift, Shaders.metal, MetalView.swift, and the implementation diff. No required source fixes were found.
 
-The app records a clear-only Metal 4 pass, attaches view/layer residency sets to one queue, retains the submitted drawable, presents it using queue drawable coordination, and signals an increasing shared-event value. The one-slot completion gate precedes drawable release and allocator reset; skipped callbacks do not create pending submissions. GPU feedback errors are printed.
+The app creates solid-color and interpolated-color pipeline states during preparation using MTL4Compiler and library-function descriptors. Their attachment format and sample count match the view. The existing render pass binds the selected pipeline, disables culling, and draws three vertices selected by vertex_id in the shader. Vertex outputs use homogeneous clip positions with W = 1; the gradient fragment function receives interpolated corner colors. Lesson 01's completion gate, allocator reuse, residency setup, and drawable retention remain intact.
 
-The learner reported expected colored output, successful resize/minimize/restore, a clear-color change, an experiment recording without submission, and normal rendering after restoring submission. These are learner-provided runtime observations, not reviewer-executed verification. No timing or validation-enabled capture was supplied.
+The learner reported that the lesson works as expected and subsequently confirmed the requested Xcode GPU-debug checks for the triangle pass, three-vertex draw, selected shader functions, and render-target output. The verdict moved from Awaiting evidence to Complete after that confirmation. Runtime and capture observations are learner-provided; the reviewer did not build or execute the macOS Metal app, and no screenshot or GPU trace was committed.
 
-Pause here as requested. Lesson 02 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before presenting the complete lesson with theory and placed snippets. The updated teaching format does not reopen lesson 01 or change its completion record.
+Understanding answers covered per-vertex versus per-fragment work and normalized positioning. The tutor clarified rasterization versus fragment shading, division by W = 1, and pipeline reuse outside the frame loop. Reinforce these distinctions naturally in future lessons.
+
+Lesson 01 remains Complete at ecaa90797bcfbb48951a23217d1b189298e73ff5; its earlier review record is preserved.
+
+Pause here as explicitly requested. Lesson 03 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before presenting the complete lesson with theory and placed snippets.
 
 ## Performance baseline
 
