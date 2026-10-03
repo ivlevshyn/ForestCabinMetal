@@ -13,6 +13,7 @@ enum RendererSetupError: Error{
     case commandBufferCreationFailed
     case sharedEventCreationFailed
     case metalLayerUnavailable
+    case defaultLibraryUnavailable
 }
 
 class Renderer: NSObject, MTKViewDelegate{
@@ -22,6 +23,10 @@ class Renderer: NSObject, MTKViewDelegate{
     private var commandBuffer: (any MTL4CommandBuffer)?
     private var commandAllocator: (any MTL4CommandAllocator)?
     private var inFlightDrawable: (any CAMetalDrawable)?
+    private var flatTrianglePipeline: (any MTLRenderPipelineState)?
+    private var colorTrianglePipeline: (any MTLRenderPipelineState)?
+    
+    private let useInterpolatedColor = true
     
     func draw(in view: MTKView){
         print("Draw requested!")
@@ -65,6 +70,15 @@ class Renderer: NSObject, MTKViewDelegate{
             return
         }
         
+        let selectedPipeline = useInterpolatedColor
+        ? colorTrianglePipeline
+        : flatTrianglePipeline
+        
+        guard let pipeline = selectedPipeline else {
+            print("Frame skipped: triangle pipeline unavailable")
+            return
+        }
+        
         let colorTarget = passDescriptor.colorAttachments[0]!
         colorTarget.loadAction = .clear
         colorTarget.storeAction = .store
@@ -82,18 +96,17 @@ class Renderer: NSObject, MTKViewDelegate{
             return
         }
         
-        encoder.label = "Sky clear pass"
+        encoder.label = "Triangle pass"
+        encoder.setRenderPipelineState(pipeline)
+        encoder.setFrontFacing(.counterClockwise)
+        encoder.setCullMode(.none)
+        encoder.drawPrimitives(primitiveType: .triangle, vertexStart: 0, vertexCount: 3)
         encoder.endEncoding()
+        
         buffer.endCommandBuffer()
         
-//        let skipSubmission = true
-//        if skipSubmission{
-//            print("Experiment:recorded but not submitted")
-//            return
-//        }
-        
         let submissionValue = (lastSubmittedValue ?? 0) + 1
-        
+
         let commitOptions = MTL4CommitOptions()
         commitOptions.addFeedbackHandler {
             feedback in
@@ -114,7 +127,7 @@ class Renderer: NSObject, MTKViewDelegate{
         
         print("Submitted frame \(submissionValue)")
         
-        print("Clear pass recorded")
+        print("Triangle pass submitted")
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -122,6 +135,31 @@ class Renderer: NSObject, MTKViewDelegate{
     }
     
     private var commandQueue: (any MTL4CommandQueue)?
+    
+    private func makeTrianglePipeline(
+        compiler: any MTL4Compiler,
+        library: any MTLLibrary,
+        view: MTKView,
+        fragmentName: String,
+        label: String
+    ) throws -> any MTLRenderPipelineState {
+        let vertexFunction = MTL4LibraryFunctionDescriptor()
+        vertexFunction.library = library
+        vertexFunction.name = "triangleVertex"
+        
+        let fragmentFunction = MTL4LibraryFunctionDescriptor()
+        fragmentFunction.library = library
+        fragmentFunction.name = fragmentName
+        
+        let descriptor = MTL4RenderPipelineDescriptor()
+        descriptor.label = label
+        descriptor.vertexFunctionDescriptor = vertexFunction
+        descriptor.fragmentFunctionDescriptor = fragmentFunction
+        descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
+        descriptor.rasterSampleCount = view.sampleCount
+        
+        return try compiler.makeRenderPipelineState(descriptor: descriptor, dynamicLinkingDescriptor: nil, compilerTaskOptions: nil)
+    }
     
     func prepare(device: any MTLDevice, view: MTKView) throws {
         
@@ -166,6 +204,18 @@ class Renderer: NSObject, MTKViewDelegate{
         queue.addResidencySet(layer.residencySet)
         self.commandQueue = queue
         print("Metal 4 queue ready")
+        
+        guard let library = device.makeDefaultLibrary() else {
+            throw RendererSetupError.defaultLibraryUnavailable
+        }
 
+        let compilerDescriptor = MTL4CompilerDescriptor()
+        let compiler = try device.makeCompiler(descriptor: compilerDescriptor)
+        
+        flatTrianglePipeline = try makeTrianglePipeline(compiler: compiler, library: library, view: view, fragmentName: "triangleFlatFragment", label: "Triangle - solid color")
+        
+        colorTrianglePipeline = try makeTrianglePipeline(compiler: compiler, library: library, view: view, fragmentName: "triangleColorFragment", label: "Triangle - interpolated color")
+        
+        print("Triangle pipeline ready")
     }
 }
