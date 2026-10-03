@@ -1,6 +1,8 @@
 # Session handoff
 
-- Lesson and task:
+- Lesson and walkthrough section:
+- Teaching delivered: none / complete lesson / partial (state the actual reason for splitting).
+- Implementation and final practice completed:
 - Repository / branch:
 - Last reviewed code commit:
 - Current code commit or uncommitted work:
@@ -11,4 +13,4 @@
 - Evidence still needed:
 - Agreed deviation from the course, if any:
 
-Keep this concise. Copy the relevant entries into PROGRESS when pausing; a transcript is unnecessary.
+Keep this concise. Copy the relevant entries into PROGRESS when pausing; a transcript is unnecessary. Reading the complete lesson does not mark implementation or practice complete. Do not turn a pause in implementation into a requirement for task-by-task teaching.

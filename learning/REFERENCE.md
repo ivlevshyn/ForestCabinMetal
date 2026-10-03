@@ -6,7 +6,7 @@ References were selected against official Apple pages and primary technical mate
 
 1. State the exact question you are trying to answer.
 2. Read the smallest relevant section with the tutor.
-3. Explain it in your own words and apply it to the cabin.
+3. Have the tutor explain the relevant idea fully with a worked example and its cabin implementation; use it in the final practice section.
 4. Record any convention or version-dependent choice in the project.
 
 Do not open a sample and copy its entire renderer. If a link moves, search its exact title on Apple Developer or the author's official site and record the replacement. For code-level questions, prefer official API documentation, specifications, or author-published technical notes.
@@ -257,4 +257,4 @@ Use this as a reminder after a term is taught. The tutor must still introduce ne
 | 25–28 | Tangent bases, numerical integration, sampling distributions, transmittance |
 | 29 | Coordinate reprojection, temporal filtering, validity tests |
 
-At each introduction, use a tiny numeric example, identify units/spaces, and test a limiting case. Do not require a standalone linear-algebra course before the learner may continue.
+At each introduction, the tutor works through a numeric example, identifies units/spaces, and explains a limiting case. Do not replace the explanation with a quiz or a documentation link. Put learner calculations and understanding questions in the final practice section. Do not require a standalone linear-algebra course before continuing.

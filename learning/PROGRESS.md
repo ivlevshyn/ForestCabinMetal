@@ -5,7 +5,7 @@
 - Swift experience: learning Swift syntax alongside Metal; explain unfamiliar syntax.
 - Graphics experience at course start: none.
 - Project: interactive forest cabin diorama.
-- Teaching preference: learner implements the app; explain APIs and Swift syntax with code snippets. Use larger, coherent coding steps with focused understanding checks.
+- Teaching preference (updated 2026-10-03): thorough, easy-to-understand theory without skipped prerequisites; explained Swift/MSL code snippets with exact file/function placement; the whole lesson in one substantial message when practical. Put independent practice, questions, and commit/review directions only at the end of the whole lesson. Experiments and extra variations are optional, require no report, and cannot block completion. The learner applies and runs the code; hints-first and task-by-task chat gates are not the default.
 - Mac chip: Apple M5 Max (learner-reported).
 - RAM: 48 GB (learner-reported).
 - macOS version: 27.0.1 (learner-reported).
@@ -75,7 +75,8 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | Date | Decision | Reason / affected lessons |
 | --- | --- | --- |
 | Edition 2 | Metal 4 from lesson 01 through the entire course | Explicit learner preference; replaces edition 1 |
-| 2026-10-03 | Larger related coding steps with explained snippets | Learner requested more coding per step and explicit Swift/Metal examples. Preserve teacher-first practice and learner implementation. |
+| 2026-10-03 | Larger related coding steps with explained snippets | Earlier preference, refined by the whole-lesson delivery decision below. |
+| 2026-10-03 | Thorough theory, placed code snippets, and whole-lesson delivery | Teach in one coherent message where practical; reserve practice, questions, and commit/review for the end. Supersedes one-task-per-message and hints-first defaults. |
 
 ## Latest session handoff
 
@@ -85,7 +86,7 @@ The app records a clear-only Metal 4 pass, attaches view/layer residency sets to
 
 The learner reported expected colored output, successful resize/minimize/restore, a clear-color change, an experiment recording without submission, and normal rendering after restoring submission. These are learner-provided runtime observations, not reviewer-executed verification. No timing or validation-enabled capture was supplied.
 
-Pause here as requested. Lesson 02 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before assigning the next task.
+Pause here as requested. Lesson 02 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before presenting the complete lesson with theory and placed snippets. The updated teaching format does not reopen lesson 01 or change its completion record.
 
 ## Performance baseline
 

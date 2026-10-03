@@ -1,6 +1,6 @@
 # Metal 4 from lesson 01 — binding course contract
 
-This file applies to every lesson. The learner explicitly chose to learn Metal 4 directly. Do not teach a prior-generation renderer first and postpone Metal 4 to an elective. This course starts with no assumed graphics knowledge; teach the following responsibilities progressively.
+This file applies to every lesson. The learner explicitly chose to learn Metal 4 directly. Do not teach a prior-generation renderer first and postpone Metal 4 to an elective. This course starts with no assumed graphics knowledge; teach every responsibility needed by the current lesson fully, in an accessible and coherent explanation.
 
 ## Environment gate
 
@@ -24,7 +24,7 @@ If the learner cannot run the needed OS/SDK, explain the exact blocker and discu
 | 24 | GPU-generated indirect arguments and IDs with explicit synchronization |
 | 32 | Optional deeper compilation scheduling/caching study |
 
-Do not lecture on the full table during lesson 01. Teach the next responsibility using one concrete need, a small experiment, and a reviewable implementation.
+The table spans the whole course; cover all responsibilities assigned to the requested lesson, not future topics. Explain them thoroughly with worked examples and snippets in one lesson message where practical. Put implementation checks, questions, and submission directions in the final section. Experiments are optional and cannot block completion.
 
 ## The API names that matter
 
@@ -67,7 +67,7 @@ Use the current documentation to choose intra-pass barriers, queue consumer/prod
 | GPU visibility | Reset precedes culling; culling precedes argument finalization; all generated data is ready before indirect fetch and shader consumption |
 | Temporal history | History writes precede next-frame reads, and reuse waits for all prior reads |
 
-The tutor must identify the exact producer and consumer stages from the selected API documentation, including indirect fetch and copy/build operations, rather than guess stage masks. Record the relationship in a compact dependency table before coding it. No universal barrier snippet belongs in every pass blindly.
+The tutor must identify and explain the exact producer and consumer stages from the selected API documentation, including indirect fetch and copy/build operations, then show the corresponding code and placement rather than guess stage masks. Record the relationship in a compact dependency table before coding it. No universal barrier snippet belongs in every pass blindly.
 
 ## Metal 4 review gate
 

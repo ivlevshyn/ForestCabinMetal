@@ -12,11 +12,11 @@
 
 ## Findings
 
-For each finding, give category (required fix / learning follow-up / optional improvement), file and symbol, observation, consequence, and a focused repair exercise. Praise specific correct reasoning when it helps reinforce learning. Do not invent issues to fill categories.
+Use this template after the learner submits the whole lesson work, not as a checkpoint after each snippet. For each finding, give category (required fix / learning follow-up / optional improvement), file and symbol, observation, consequence, and a focused correction. Include an explained code snippet and exact placement when useful; the learner applies and tests it. Praise specific correct reasoning when it helps reinforce learning. Do not invent issues to fill categories.
 
 ## Understanding
 
-Record one mechanism the learner explained and one prediction or modification they demonstrated. Ask for missing evidence rather than assuming understanding from polished code.
+Use the grouped end-of-lesson answers and implemented work to assess the learner’s explanation of the relevant mechanisms. Ask for missing understanding evidence rather than assuming understanding from polished code. Do not require an experiment, extra variation, or independent extension; skipping these cannot affect the verdict.
 
 ## Verdict
 

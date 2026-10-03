@@ -29,7 +29,7 @@ Validation may add overhead. Record whether it was enabled when discussing perfo
 
 ## A useful help request
 
-Provide the lesson/task, commit or relevant current files, expected result, actual result, exact error text, the smallest relevant code, and what you already tested. A screenshot and an intermediate-target view are often more useful together than either alone. Do not post only “it doesn't work.” The tutor should help you narrow the problem without demanding an exhaustive report first.
+Provide the lesson/task, commit or relevant current files, expected result, actual result, exact error text, the smallest relevant code, and what you already tested. A screenshot and an intermediate-target view are often more useful together than either alone. Do not post only “it doesn't work.” The tutor should help you narrow the problem without demanding an exhaustive report first, explain the cause, and provide a focused corrected snippet with exact placement when helpful. Hints are optional, not a required path before code. Interactive debugging after lesson delivery does not imply a return to task-by-task teaching.
 
 ## Numerical guardrails
 

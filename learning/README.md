@@ -2,9 +2,9 @@
 
 ## Read this first
 
-You know Swift and are starting graphics programming from zero. You will build one Metal app from a clear-colored window to an advanced forest cabin diorama. You implement the code; ChatGPT teaches, asks you to experiment, helps you debug, and reviews your submitted commits.
+You are starting graphics programming from zero and learning unfamiliar Swift syntax alongside Metal; see PROGRESS for your current background. You will build one Metal app from a clear-colored window to an advanced forest cabin diorama. You implement the code; ChatGPT teaches, helps you debug, and reviews your submitted commits.
 
-The course is deliberately detailed but is not a solution manual. Each lesson specifies the concepts, staged exercises, observable outcomes, and evidence needed for review. The tutor supplies explanations adapted to your current understanding, including worked math examples and API guidance; it does not replace practice with finished files.
+Each lesson is taught as a complete, substantial explanation: accessible theory, worked examples, and clear Swift/MSL snippets with exact file and function placement. The tutor expands the lesson outline rather than merely assigning its bullet points. The learner applies the code and checks the required result afterward; experiments and extra variations are optional. Practice, understanding questions, and commit/review directions appear together at the end of the whole lesson. See [the delivery template](templates/LESSON-DELIVERY.md).
 
 **Required session context:** [TEACHING](TEACHING.md), [PROGRESS](PROGRESS.md), the current lesson, and relevant parts of [PROJECT](PROJECT.md), [METAL4](METAL4.md), and [REFERENCE](REFERENCE.md). These are the working agreement. Every lesson repeats a short reminder so the agreement is not lost when files are attached individually.
 
@@ -22,16 +22,14 @@ The default is a native macOS Swift app with MTKView and handwritten MSL shaders
 
 ## How to work through a lesson
 
-1. Start from the previous reviewed checkpoint and give the tutor the exact branch/commit.
-2. Read the requested lesson's outcome, not all future lessons.
-3. Let the tutor explain one concept and assign one small task.
-4. Write the implementation yourself, run it, and share what happened.
-5. Predict and run an experiment. Explain the result in your own words.
-6. Repeat until the acceptance criteria are satisfied, then commit and push.
-7. Request a review of that exact commit and provide the evidence requested by the lesson.
-8. Repair blocking findings, request a re-review of the changed commit, and record the verdict in PROGRESS.
+1. Start from the previous reviewed checkpoint and give the tutor the branch/commit.
+2. Request the whole lesson in one organized message where practical.
+3. Read the full theory and explained implementation walkthrough, with exact code placement and no mandatory replies between sections.
+4. Use the final practice section to apply the changes, run the app, and answer the understanding questions. Experiments and extra variations are optional and do not affect completion. Ask for debugging help whenever needed.
+5. Once the lesson work is ready, follow its final commit/push instructions and request review of the exact SHA with your evidence.
+6. Apply any required corrections, request re-review, and record the verdict in PROGRESS. The tutor does not automatically begin the next lesson.
 
-If a lesson takes several sessions, record the task ID (for example 13.3) and the next action. Session-count hints are rough indicators of relative scope, not deadlines or promises. Do not rush a prerequisite simply to follow a timetable.
+If a lesson takes several sessions, record the task ID (for example 13.3) and the next action. Session-count hints describe possible implementation effort, not a required number of teaching messages or deadlines. Split teaching across messages only for a genuine limit, essential blocker, or your preference; keep the practice/questions/submission section at the end of the whole lesson. Do not rush a prerequisite simply to follow a timetable.
 
 ## Core, advanced, and electives
 
@@ -89,11 +87,11 @@ Default order is intentional. A future tutor may adapt it with you, but must rec
 | 20 | Finished core day/dusk scene | Full frame explanation and measured baseline |
 | 24 | Compute and GPU visibility | Parallel ownership, dependencies, and indirect rendering |
 | 29 | Advanced lighting and temporal stability | Sampling, reconstruction, and history validity |
-| 30 | Reproducible advanced project | Independent extension and justified tradeoffs |
+| 30 | Reproducible advanced project | Reproducible implementation and justified tradeoffs |
 
 ## Git and evidence conventions
 
-Use your normal branch workflow; no pull-request ritual is required for every lesson. Commit after each lesson and whenever a useful intermediate checkpoint is reached. Suggested final code commit title: `lesson 07: build cabin blockout`. The review targets the actual SHA, not a moving branch name.
+Use your normal branch workflow; no pull-request ritual is required for every lesson. The tutor gives commit/review instructions at the end of the whole lesson. Commit when the work is ready; you may also make your own intermediate checkpoints, but they are not required after each walkthrough section. Suggested final code commit title: `lesson 07: build cabin blockout`. The review targets the actual SHA, not a moving branch name.
 
 Keep screenshots small and named clearly, such as `evidence/lesson-13/shadows-on.png`. Large captures/videos may be attached separately instead of committed. Add the exact capture settings and commit in the accompanying note. Do not commit DerivedData or build caches.
 
@@ -105,15 +103,15 @@ Use these status values: **Not started**, **In progress**, **Ready for review**,
 
 ### Begin or resume
 
-> Read learning/README.md, learning/TEACHING.md, learning/METAL4.md, learning/PROGRESS.md, and lesson [ID/path] in [repository URL] at [branch/SHA]. Read METAL4; use PROJECT and REFERENCE where needed. I want to learn this section through practice. Inspect the current implementation, explain the next concept, give me one bounded task, and wait for my attempt. No complete solution by default.
+> Read learning/README.md, learning/TEACHING.md, learning/METAL4.md, learning/PROGRESS.md, and lesson [ID/path] in [repository URL] at [branch/SHA]. Read METAL4; use PROJECT and REFERENCE where needed. Inspect the current implementation, then teach the whole lesson in one substantial message where practical. Explain all necessary theory in plain language, show clear snippets with exact file/function placement, and explain the important lines. Put independent practice, questions, and commit/review directions together at the end. Do not pause after each internal step or edit my app for me.
 
-### Ask for a hint
+### Ask for help
 
-> I am on task [ID]. I expected [...], but observed [...]. Here is the relevant code/error/capture and what I tried. Help me identify the responsible stage and choose one diagnostic experiment. Start with a hint, not a replacement implementation.
+> I am on task [ID]. I expected [...], but observed [...]. Here is the relevant code/error/capture and what I tried. Explain the cause, show a focused corrected snippet with exact placement when useful, and tell me how to verify it. Use hints only if I request that style.
 
 ### Request review
 
-> Review lesson [ID] at [code SHA] against [baseline SHA]. Here is my runtime evidence and experiment explanation: [...]. Follow TEACHING and the lesson rubric. Identify what you inspected, what I reported, and what you personally ran. Give me a verdict and focused repair tasks for any blockers. Do not edit my files.
+> Review lesson [ID] at [code SHA] against [baseline SHA]. Here is my runtime evidence and understanding answers: [...]. Follow TEACHING and the lesson rubric. Identify what you inspected, what I reported, and what you personally ran. Give me a verdict and focused repair tasks for any blockers. Do not edit my files.
 
 ### When repository access is unavailable
 
@@ -121,4 +119,4 @@ Attach this README, TEACHING, PROGRESS, the current lesson, PROJECT, METAL4, and
 
 ## Updating the course
 
-Keep lesson IDs stable. Add clarifications or split large tasks into substeps without renumbering downstream lessons. Record substantial decisions in PROGRESS. If the installed SDK differs from the examples, adjust the API details with an explanation and keep the conceptual goal intact. The original course contains guidance, not prebuilt code or an assurance that a future tutor has executed your app.
+Keep lesson IDs stable. Internal task IDs organize the complete walkthrough; they do not require separate chat turns. Add clarifications without renumbering downstream lessons. Record substantial decisions in PROGRESS. If the installed SDK differs from the examples, adjust the API details with an explanation and keep the conceptual goal intact. The original course contains guidance, not prebuilt code or an assurance that a future tutor has executed your app.
