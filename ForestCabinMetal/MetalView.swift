@@ -27,6 +27,8 @@ struct MetalView : NSViewRepresentable {
             return view
         }
         
+        view.colorPixelFormat = .bgra8Unorm_srgb
+        
         do {
             try context.coordinator.prepare(device: device, view: view)
             view.isPaused = false

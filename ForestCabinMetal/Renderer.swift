@@ -21,6 +21,7 @@ class Renderer: NSObject, MTKViewDelegate{
     private var lastSubmittedValue: UInt64? = nil
     private var commandBuffer: (any MTL4CommandBuffer)?
     private var commandAllocator: (any MTL4CommandAllocator)?
+    private var inFlightDrawable: (any CAMetalDrawable)?
     
     func draw(in view: MTKView){
         print("Draw requested!")
@@ -29,6 +30,8 @@ class Renderer: NSObject, MTKViewDelegate{
             print("Draw skipped: completion event unavailable")
             return
         }
+        
+        inFlightDrawable = nil
         
         if let pendingValue = lastSubmittedValue {
             if event.signaledValue < pendingValue {
@@ -55,7 +58,8 @@ class Renderer: NSObject, MTKViewDelegate{
         print("Color target exists: \(passDescriptor.colorAttachments[0].texture != nil)")
         
         guard let buffer = commandBuffer,
-              let allocator = commandAllocator else {
+              let allocator = commandAllocator,
+              let queue = commandQueue else {
             print("Frame skipped: command storage unavailable")
             return
         }
@@ -80,6 +84,28 @@ class Renderer: NSObject, MTKViewDelegate{
         encoder.endEncoding()
         buffer.endCommandBuffer()
         
+        let submissionValue = (lastSubmittedValue ?? 0) + 1
+        
+        let commitOptions = MTL4CommitOptions()
+        commitOptions.addFeedbackHandler {
+            feedback in
+            if let error = feedback.error {
+                print("GPU submission failed: \(error)")
+            }
+        }
+        
+        inFlightDrawable = drawable
+        
+        queue.waitForDrawable(drawable)
+        queue.commit([buffer], options: commitOptions)
+        queue.signalDrawable(drawable)
+        drawable.present()
+        
+        queue.signalEvent(event, value: submissionValue)
+        lastSubmittedValue = submissionValue
+        
+        print("Submitted frame \(submissionValue)")
+        
         print("Clear pass recorded")
     }
     
@@ -93,11 +119,7 @@ class Renderer: NSObject, MTKViewDelegate{
         
         let descriptor = MTL4CommandQueueDescriptor()
         descriptor.label = "Forest cabin queue"
-        
-        commandQueue = try device.makeMTL4CommandQueue(descriptor: descriptor)
-        
-        print("Metal 4 queue ready")
-        
+                        
         guard let buffer = device.makeCommandBuffer() else {
             throw RendererSetupError.commandBufferCreationFailed
         }
@@ -135,5 +157,7 @@ class Renderer: NSObject, MTKViewDelegate{
         queue.addResidencySet(view.residencySet)
         queue.addResidencySet(layer.residencySet)
         self.commandQueue = queue
+        print("Metal 4 queue ready")
+
     }
 }
