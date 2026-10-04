@@ -8,28 +8,22 @@
 #include <metal_stdlib>
 using namespace metal;
 
+struct GPUVertex {
+    float4 position;
+    float4 color;
+};
 
 struct TriangleVertexOutput {
     float4 position [[position]];
     float3 color;
 };
 
-vertex TriangleVertexOutput triangleVertex(uint vertexID [[vertex_id]]){
-    const float2 positions[3] = {
-        float2(-0.65, -0.55),
-        float2(0.65, -0.55),
-        float2(0.00, 0.65)
-    };
-    
-    const float3 colors[3] = {
-        float3(1.0, 0.0, 0.0),
-        float3(0.0, 1.0, 0.0),
-        float3(0.0, 0.0, 1.0)
-    };
+vertex TriangleVertexOutput triangleVertex(uint vertexID [[vertex_id]], device const GPUVertex *vertices [[buffer(0)]]){
+    GPUVertex gpuvertex = vertices[vertexID];
     
     TriangleVertexOutput output;
-    output.position = float4(positions[vertexID], 0.0, 1.0);
-    output.color = colors[vertexID];
+    output.position = gpuvertex.position;
+    output.color = gpuvertex.color.xyz;
     return output;
 }
 
