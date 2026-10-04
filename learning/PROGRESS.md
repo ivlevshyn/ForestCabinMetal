@@ -18,11 +18,11 @@
 
 ## Current position
 
-- Current lesson: 02.
-- Current task: 02.1–02.5 complete; paused after final review.
-- Last reviewed code SHA: 826145a5387295f40dd314be31b9356057ce07c1.
-- Current code SHA: 826145a5387295f40dd314be31b9356057ce07c1 (this progress-only update does not change the reviewed implementation).
-- Next action: wait for the learner to request lesson 03; do not begin it yet.
+- Current lesson: 03.
+- Current task: 03.1–03.5 complete; paused after final review.
+- Last reviewed code SHA: 526aca74fe3435aeac09cbae61aabea0640f4941.
+- Current code SHA: 526aca74fe3435aeac09cbae61aabea0640f4941 (this progress-only update does not change the reviewed implementation).
+- Next action: wait for the learner to request lesson 04; do not begin it yet.
 - Current blocker: none known.
 - Runtime evidence location: learner reports in the teaching conversation; no screenshot or GPU capture committed.
 
@@ -34,7 +34,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | --- | --- | --- | --- | --- |
 | 01 | Your first Metal 4 frame | Complete | ecaa90797bcfbb48951a23217d1b189298e73ff5 | 2026-10-03: source reviewed; learner reported colored output, color variation, resize/minimize/restore, skipped submission, and successful restoration. Reviewer did not execute Metal. |
 | 02 | A triangle and the graphics pipeline | Complete | 826145a5387295f40dd314be31b9356057ce07c1 | 2026-10-03: source and baseline diff reviewed; learner reported expected lesson behavior and confirmed the requested Xcode GPU-debug capture checks. Understanding answers reviewed with clarifications. Reviewer did not execute Metal. |
-| 03 | Send geometry from Swift to the GPU | Not started | — | — |
+| 03 | Send geometry from Swift to the GPU | Complete | 526aca74fe3435aeac09cbae61aabea0640f4941 | 2026-10-04: source and baseline diff reviewed; learner confirmed both colored panels, resize/minimize/restore without validation errors, expected layout/count logs, and GPU capture checks for twelve UInt16 indices and vertex-stage buffer slot 0. Understanding answers reviewed with clarifications. Reviewer did not execute Metal. |
 | 04 | Move geometry with transforms and time | Not started | — | — |
 | 05 | Enter 3D with perspective and depth | Not started | — | — |
 | 06 | Explore the cabin with an orbit camera | Not started | — | — |
@@ -72,6 +72,8 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 - Lesson 02: vertex shaders supply corner positions and colors; rasterization determines coverage and interpolates values; fragment shaders calculate output colors. W = 1 leaves coordinates unchanged during perspective division. Reinforce that pipeline creation belongs in preparation to reuse compiled state and avoid per-frame compilation, rather than merely because the state must exist before drawing.
 
+- Lesson 03: reinforce that creating a buffer allocates storage while retaining it keeps the object and allocation alive; residency enables GPU access and argument-table binding connects the address to a shader slot. Indexing saves memory when full-record reuse outweighs index storage. Stride includes array spacing required by alignment/padding. A shared position may need separate records when normals or UV coordinates differ.
+
 ## Decisions and adaptations
 
 | Date | Decision | Reason / affected lessons |
@@ -81,6 +83,18 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 2026-10-03 | Thorough theory, placed code snippets, and whole-lesson delivery | Teach in one coherent message where practical; reserve practice, questions, and commit/review for the end. Supersedes one-task-per-message and hints-first defaults. |
 
 ## Latest session handoff
+
+Lesson 03 is Complete at code commit 526aca74fe3435aeac09cbae61aabea0640f4941, reviewed against baseline 7c8ff82a00cd30375d0ed9c0c4bcbd8734853798. The reviewed head includes implementation commit 66641ac9b6c1b6885b15538b80b7bc1d2254236b and the subsequent merge. Review inspected Renderer.swift, Shaders.metal, MetalView.swift, and the implementation diff. No blocking source issues were found.
+
+Swift creates eight position/color records and twelve UInt16 indices for two panels and four triangles. The CPU/MSL records agree on two float4 fields, offsets 0 and 16, alignment 16, and stride 32. Uploads use stride-based lengths and scoped source pointers. Vertex and index buffers are created during preparation, retained by renderer properties, added to an app residency set whose membership is committed, and made available through queue attachment. The vertex buffer address is bound at argument-table slot 0 for the vertex stage. The indexed draw supplies the index GPU address and valid byte length. Lesson 01's completion gate, allocator reuse, view/layer residency, and drawable retention remain intact.
+
+On 2026-10-04, the learner confirmed both colored panels, resize/minimize/restore without validation errors, the expected layout and geometry logs (8 vertices, 256 vertex bytes, 12 indices, 24 index bytes), and GPU capture checks for twelve UInt16 indices and the vertex buffer at vertex-stage slot 0. The verdict moved from Awaiting evidence to Complete after this confirmation. Runtime and capture observations are learner-provided; the reviewer did not build or execute the macOS Metal app, and no screenshot or GPU trace was committed.
+
+Understanding answers covered reuse through indices, array spacing, the distinct resource responsibilities, and the eight-vertex/twelve-index/four-triangle count. The tutor clarified allocation versus retention, the index-storage tradeoff, and separate records for differing UVs or normals. Reinforce these distinctions naturally rather than repeating the lesson.
+
+Lesson 04 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before presenting the complete lesson with theory and placed snippets.
+
+## Previous lesson 02 handoff
 
 Lesson 02 is Complete at code commit 826145a5387295f40dd314be31b9356057ce07c1, reviewed against baseline 390f37ddc7333d352a83aab678b41e63f5019540. Review inspected Renderer.swift, Shaders.metal, MetalView.swift, and the implementation diff. No required source fixes were found.
 
@@ -92,7 +106,7 @@ Understanding answers covered per-vertex versus per-fragment work and normalized
 
 Lesson 01 remains Complete at ecaa90797bcfbb48951a23217d1b189298e73ff5; its earlier review record is preserved.
 
-Pause here as explicitly requested. Lesson 03 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before presenting the complete lesson with theory and placed snippets.
+At the end of lesson 02, the learner requested a pause before lesson 03. That historical pause was superseded by the learner's request to begin lesson 03 on 2026-10-04; see the latest handoff above.
 
 ## Performance baseline
 
