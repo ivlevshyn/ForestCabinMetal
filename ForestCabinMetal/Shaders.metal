@@ -13,18 +13,28 @@ struct GPUVertex {
     float4 color;
 };
 
+struct GPUUniforms {
+    float4x4 model;
+};
+
 struct TriangleVertexOutput {
     float4 position [[position]];
     float3 color;
 };
 
-vertex TriangleVertexOutput triangleVertex(uint vertexID [[vertex_id]], device const GPUVertex *vertices [[buffer(0)]]){
+vertex TriangleVertexOutput triangleVertex(
+                                           uint vertexID [[vertex_id]],
+                                           device const GPUVertex *vertices [[buffer(0)]],
+                                           constant GPUUniforms &uniforms [[buffer(1)]]
+){
     GPUVertex gpuvertex = vertices[vertexID];
     
     TriangleVertexOutput output;
-    output.position = gpuvertex.position;
+    output.position = uniforms.model * gpuvertex.position;
     output.color = gpuvertex.color.xyz;
+    
     return output;
+    
 }
 
 fragment float4 triangleFlatFragment() {

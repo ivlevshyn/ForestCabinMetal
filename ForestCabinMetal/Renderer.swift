@@ -15,6 +15,39 @@ struct GPUVertex{
     var color: SIMD4<Float>
 }
 
+struct GPUUniforms{
+    var model: simd_float4x4
+}
+
+private func makeScale(_ scale: SIMD3<Float>) -> simd_float4x4 {
+    simd_float4x4(columns:(
+                  SIMD4<Float>(scale.x, 0, 0, 0),
+                  SIMD4<Float>(0, scale.y, 0, 0),
+                  SIMD4<Float>(0, 0, scale.z, 0),
+                  SIMD4<Float>(0, 0, 0, 1)
+    ))
+}
+
+private func makeTranslation(_ translation: SIMD3<Float>) -> simd_float4x4 {
+    simd_float4x4(columns:(
+        SIMD4<Float>(1, 0, 0, 0),
+        SIMD4<Float>(0, 1, 0, 0),
+        SIMD4<Float>(0, 0, 1, 0),
+        SIMD4<Float>(translation.x, translation.y, translation.z, 1)
+    ))
+}
+
+private func makeRotationZ(_ radians: Float) -> simd_float4x4 {
+    let c = cos(radians)
+    let s = sin(radians)
+    return simd_float4x4(columns:(
+        SIMD4<Float>(c, s, 0, 0),
+        SIMD4<Float>(-s, c, 0, 0),
+        SIMD4<Float>(0, 0, 1, 0),
+        SIMD4<Float>(0, 0, 0, 1)
+    ))
+}
+
 enum RendererSetupError: Error{
     case commandBufferCreationFailed
     case sharedEventCreationFailed
@@ -23,6 +56,7 @@ enum RendererSetupError: Error{
     case vertexLayoutMismatch
     case invalidGeometry
     case bufferCreationFailed(String)
+    case uniformLayoutMismatch
 }
 
 class Renderer: NSObject, MTKViewDelegate{
@@ -38,13 +72,92 @@ class Renderer: NSObject, MTKViewDelegate{
     private var meshIndexBuffer: (any MTLBuffer)?
     private var meshArguments: (any MTL4ArgumentTable)?
     private var meshResidencySet: (any MTLResidencySet)?
+    private var wallUniformBuffer: (any MTLBuffer)?
+    private var roofUniformBuffer: (any MTLBuffer)?
+    private var animationTime: TimeInterval = 0
+    private var previousAnimationSample: CFTimeInterval?
+    
+    private var animationPaused = false
+    private var animationSceneActive = true
+    private var lastResetID = 0
     
     private var vertexCount = 0
     private var indexCount = 0
     
     private let useInterpolatedColor = true
     
+    func setAnimationControls(
+        paused: Bool,
+        resetID: Int,
+        sceneActive: Bool
+    ) {
+        if animationPaused != paused ||
+            animationSceneActive != sceneActive {
+            previousAnimationSample = nil
+        }
+        
+        animationPaused = paused
+        animationSceneActive = sceneActive
+        
+        if resetID != lastResetID {
+            animationTime = 0
+            previousAnimationSample = nil
+            lastResetID = resetID
+        }
+    }
+    
+    private func updateAnimationTime() {
+        guard !animationPaused, animationSceneActive else {
+            previousAnimationSample = nil
+            return
+        }
+        
+        let now = CACurrentMediaTime()
+        
+        guard let previous = previousAnimationSample else {
+            previousAnimationSample = now
+            return
+        }
+        
+        previousAnimationSample = now
+        
+        let deltaTime = now - previous
+        
+        guard deltaTime >= 0, deltaTime <= 0.25 else {
+            return
+        }
+        
+        animationTime += deltaTime
+    }
+    
+    private func writeObjectUniforms(
+        wallBuffer: any MTLBuffer,
+        roofBuffer: any MTLBuffer
+    ) {
+        let sway = Float(0.15 * sin(0.8 * animationTime))
+        
+        let wallModel = makeTranslation(SIMD3<Float>(-0.48, -0.05, 0)) *
+        makeRotationZ(0) *
+        makeScale(SIMD3<Float>(0.58, 0.70, 1))
+        
+        let roofModel = makeTranslation(SIMD3<Float>(0.48, 0.08, 0)) *
+        makeRotationZ(0.22 + sway) *
+        makeScale(SIMD3<Float>(0.58, 0.70, 1))
+        
+        var wallUniforms = GPUUniforms(model: wallModel)
+        var roofUniforms = GPUUniforms(model: roofModel)
+        
+        withUnsafeBytes(of: &wallUniforms) { bytes in
+            wallBuffer.contents().copyMemory(from: bytes.baseAddress!, byteCount: bytes.count)
+        }
+        
+        withUnsafeBytes(of: &roofUniforms) { bytes in
+            roofBuffer.contents().copyMemory(from: bytes.baseAddress!, byteCount: bytes.count)
+        }
+    }
+    
     func draw(in view: MTKView){
+        updateAnimationTime()
         print("Draw requested!")
         
         guard let event = completionEvent else {
@@ -95,8 +208,14 @@ class Renderer: NSObject, MTKViewDelegate{
             return
         }
         
-        guard let arguments = meshArguments, meshVertexBuffer != nil, vertexCount > 0 else {
-            print("Frame skipped: geometry unavailable")
+        guard let arguments = meshArguments,
+              meshVertexBuffer != nil,
+              let indices = meshIndexBuffer,
+              let wallUniforms = wallUniformBuffer,
+              let roofUniforms = roofUniformBuffer,
+              vertexCount > 0,
+              indexCount > 0 else {
+            print("Frame skipped: insufficient data")
             return
         }
         
@@ -106,6 +225,8 @@ class Renderer: NSObject, MTKViewDelegate{
         colorTarget.clearColor = MTLClearColor(
             red: 0.16, green: 0.35, blue: 0.55, alpha: 1.0
         )
+        
+        writeObjectUniforms(wallBuffer: wallUniforms, roofBuffer: roofUniforms)
         
         allocator.reset()
         buffer.beginCommandBuffer(allocator: allocator)
@@ -121,21 +242,17 @@ class Renderer: NSObject, MTKViewDelegate{
         encoder.setRenderPipelineState(pipeline)
         encoder.setFrontFacing(.counterClockwise)
         encoder.setCullMode(.none)
+        
+        arguments.setAddress(wallUniforms.gpuAddress, index: 1)
         encoder.setArgumentTable(arguments, stages: .vertex)
         
-        if let indices = meshIndexBuffer {
-            let indexByteOffset = 0
-            
-            encoder.drawIndexedPrimitives(primitiveType: .triangle,
-                                          indexCount: indexCount,
-                                          indexType: .uint16,
-                                          indexBuffer: indices.gpuAddress + UInt64(indexByteOffset),
-                                          indexBufferLength: indices.length - indexByteOffset)
-        } else {
-            encoder.drawPrimitives(primitiveType: .triangle,
-                                   vertexStart: 0,
-                                   vertexCount: vertexCount)
-        }
+        encoder.drawIndexedPrimitives(primitiveType: .triangle, indexCount: indexCount, indexType: .uint16, indexBuffer: indices.gpuAddress, indexBufferLength: indices.length)
+        
+        arguments.setAddress(roofUniforms.gpuAddress, index: 1)
+        encoder.setArgumentTable(arguments, stages: .vertex)
+        
+        encoder.drawIndexedPrimitives(primitiveType: .triangle, indexCount: indexCount, indexType: .uint16, indexBuffer: indices.gpuAddress, indexBufferLength: indices.length)
+        
         encoder.endEncoding()
         
         buffer.endCommandBuffer()
@@ -211,21 +328,41 @@ class Renderer: NSObject, MTKViewDelegate{
     }
     
     private func makeGeometryData() -> (vertices: [GPUVertex], indices: [UInt16]?){
-        let leftPanel = makePanelVertices(xMin: -0.90, xMax: -0.10, yMin: -0.45, yMax: 0.45)
-        
-        let rightPanel = makePanelVertices(xMin: 0.20, xMax: 0.90, yMin: -0.65, yMax: 0.65)
-        
-        let vertices = leftPanel + rightPanel
+        let vertices = makePanelVertices(xMin: -0.5, xMax: 0.5, yMin: -0.5, yMax: 0.5)
         
         let indices: [UInt16] = [
             0, 1, 2,
-            0, 2, 3,
-            
-            4, 5, 6,
-            4, 6, 7
+            0, 2, 3
         ]
         
         return (vertices: vertices, indices: indices)
+    }
+    
+    private func verifyTransformMath() {
+        let pointA = SIMD4<Float>(0.5, 0.5, 0, 1)
+        let pointB = SIMD4<Float>(-0.5, 0.25, 0, 1)
+        
+        let identity = matrix_identity_float4x4
+        let scale = makeScale(SIMD3<Float>(2, 0.5, 1))
+        
+        let scaledA = scale * pointA
+        let scaledB = scale * pointB
+        
+        assert(simd_length(identity * pointA - pointA) < 0.0001)
+        assert(simd_length(identity * pointB - pointB) < 0.0001)
+        
+        assert(simd_length(scaledA - SIMD4<Float>(1, 0.25, 0, 1)) < 0.0001)
+        
+        assert (simd_length(scaledB - SIMD4<Float>(-1, 0.125, 0, 1)) < 0.0001)
+        
+        let xPoint = SIMD4<Float>(1, 0, 0, 1)
+        let quarterTurn = makeRotationZ(Float.pi / 2)
+        
+        assert(simd_length(makeRotationZ(0) * xPoint - xPoint) < 0.0001)
+        
+        assert(simd_length(quarterTurn * xPoint - SIMD4<Float>(0, 1, 0, 1)) < 0.0001)
+        
+        print("Transform checks passed: \(scaledA), \(scaledB)")
     }
     
     private func verifyVertexLayout() throws {
@@ -245,6 +382,22 @@ class Renderer: NSObject, MTKViewDelegate{
               positionOffset == 0,
               colorOffset == 16 else {
             throw RendererSetupError.vertexLayoutMismatch
+        }
+    }
+    
+    private func verifyUniformLayout() throws {
+        let size = MemoryLayout<GPUUniforms>.size
+        let stride = MemoryLayout<GPUUniforms>.stride
+        let alignment = MemoryLayout<GPUUniforms>.alignment
+        let modelOffset = MemoryLayout<GPUUniforms>.offset(of: \GPUUniforms.model)
+        
+        print("GPUUniforms: size = \(size), stride = \(stride), " + "alignment = \(alignment), modelOffset=\(String(describing: modelOffset))")
+        
+        guard size == 64,
+              stride == 64,
+              alignment == 16,
+              modelOffset == 0 else {
+            throw RendererSetupError.uniformLayoutMismatch
         }
     }
     
@@ -310,9 +463,24 @@ class Renderer: NSObject, MTKViewDelegate{
             indexBuffer = buffer
         }
         
+        try verifyUniformLayout()
+        
+        let uniformByteCount = MemoryLayout<GPUUniforms>.stride
+        
+        guard let wallUniforms = device.makeBuffer(length: uniformByteCount, options: .storageModeShared) else {
+            throw RendererSetupError.bufferCreationFailed("wall uniforms")
+        }
+        
+        guard let roofUniforms = device.makeBuffer(length: uniformByteCount, options: .storageModeShared) else {
+            throw RendererSetupError.bufferCreationFailed("roof uniforms")
+        }
+        
+        wallUniforms.label = "wall uniforms"
+        roofUniforms.label = "roof uniforms"
+        
         let residencyDesciptor = MTLResidencySetDescriptor()
         residencyDesciptor.label = "Lesson 03 geometry residency"
-        residencyDesciptor.initialCapacity = 2
+        residencyDesciptor.initialCapacity = 4
         
         let residencySet = try device.makeResidencySet(descriptor: residencyDesciptor)
         
@@ -322,18 +490,24 @@ class Renderer: NSObject, MTKViewDelegate{
             residencySet.addAllocation(indexBuffer)
         }
         
+        residencySet.addAllocation(wallUniforms)
+        residencySet.addAllocation(roofUniforms)
+        
         residencySet.commit()
         
         let argumentDescriptor = MTL4ArgumentTableDescriptor()
         argumentDescriptor.label = "Lesson 03 vertec arguments"
-        argumentDescriptor.maxBufferBindCount = 1
+        argumentDescriptor.maxBufferBindCount = 2
         argumentDescriptor.maxTextureBindCount = 0
         argumentDescriptor.maxSamplerStateBindCount = 0
         
         let arguments = try device.makeArgumentTable(descriptor: argumentDescriptor)
         
         arguments.setAddress(vertexBuffer.gpuAddress, index: 0)
+        arguments.setAddress(wallUniforms.gpuAddress, index: 1)
         
+        self.wallUniformBuffer = wallUniforms
+        self.roofUniformBuffer = roofUniforms
         self.meshVertexBuffer = vertexBuffer
         self.meshIndexBuffer = indexBuffer
         self.meshArguments = arguments
@@ -352,6 +526,8 @@ class Renderer: NSObject, MTKViewDelegate{
     }
     
     func prepare(device: any MTLDevice, view: MTKView) throws {
+        
+        verifyTransformMath()
         
         let descriptor = MTL4CommandQueueDescriptor()
         descriptor.label = "Forest cabin queue"

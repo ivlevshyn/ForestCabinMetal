@@ -11,6 +11,10 @@ import MetalKit
 
 struct MetalView : NSViewRepresentable {
     
+    var animationPaused: Bool = false
+    var resetID: Int = 0
+    var sceneActive: Bool = true
+    
     func makeNSView(context: Context) -> MTKView{
         let view = MTKView(
             frame: .zero,
@@ -19,7 +23,7 @@ struct MetalView : NSViewRepresentable {
         
         view.isPaused = true
         view.enableSetNeedsDisplay = false
-        view.preferredFramesPerSecond = 1
+        view.preferredFramesPerSecond = 60
         view.delegate = context.coordinator
         
         guard let device = view.device else{
@@ -31,6 +35,9 @@ struct MetalView : NSViewRepresentable {
         
         do {
             try context.coordinator.prepare(device: device, view: view)
+            
+            context.coordinator.setAnimationControls(paused: animationPaused, resetID: resetID, sceneActive: sceneActive)
+            
             view.isPaused = false
         } catch {
             print("Cannot prepare renderer: \(error)")
@@ -39,7 +46,9 @@ struct MetalView : NSViewRepresentable {
         return view
     }
     
-    func updateNSView(_ nsView: MTKView, context: Context){}
+    func updateNSView(_ nsView: MTKView, context: Context){
+        context.coordinator.setAnimationControls(paused: animationPaused, resetID: resetID, sceneActive: sceneActive)
+    }
     
     func makeCoordinator() -> Renderer {
         Renderer()
