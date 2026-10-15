@@ -4,7 +4,7 @@
 
 [Previous: 28](./28-volumetric-sunlight.md) · [Next: 30](./30-advanced-capstone.md)
 
-> Tutor: read [TEACHING](../TEACHING.md), [PROGRESS](../PROGRESS.md), [PROJECT](../PROJECT.md), and [METAL4](../METAL4.md). Use Metal 4 throughout. Present the complete lesson with thorough plain-language theory, explained code snippets, and exact file/function placement in one coherent message where practical. Internal task IDs organize the walkthrough, not separate chat turns. Put independent practice, questions, and commit/review directions only in the final section. Follow [the delivery template](../templates/LESSON-DELIVERY.md).
+> Tutor: read [TEACHING](../TEACHING.md), [PROGRESS](../PROGRESS.md), [PROJECT](../PROJECT.md), and [METAL4](../METAL4.md). Use Metal 4 throughout. Teach this lesson in manageable steps across messages, with thorough plain-language theory, worked examples, and explained snippets with exact placement. Deliver the current step and pause before continuing. Keep understanding questions until the end of the entire lesson; no per-step quizzes or mandatory commits. Check file responsibilities before extending them and teach small extractions before code causes bloat. Follow [the delivery template](../templates/LESSON-DELIVERY.md).
 
 ## 1. Outcome and purpose
 
@@ -12,7 +12,7 @@ Build an educational temporal anti-aliasing (TAA) path to reduce shimmering on r
 
 ## 2. Prerequisites and starting checkpoint
 
-Lesson 28 complete. Frame resources, coordinate transforms, depth, offscreen textures, and animation are prerequisites. Implementation may take several sessions, but present the complete explanation in one message where practical. Split teaching only for a genuine limit, an essential blocker, or the learner's preference; keep practice and questions at the end of the whole lesson.
+Lesson 28 complete. Frame resources, coordinate transforms, depth, offscreen textures, and animation are prerequisites. Teach the implementation in manageable steps across messages, allowing time to apply and debug each step. Keep understanding questions and final submission directions at the end of the entire lesson.
 
 Inspect the actual relevant files and previous review status. If the prerequisite behavior is broken, repair that gap before layering on this lesson. Do not assume a commit title proves completion.
 
@@ -22,11 +22,11 @@ TAA combines current samples with reprojected history. A small subpixel projecti
 
 Specify units and signs before coding: for example UV displacement = previous unjittered UV minus current unjittered UV, with jitter handled explicitly during lookup. Keep previous camera/object transforms and previous deformation time. A matrix-only motion vector is not correct for moving leaves. History should have a documented linear color/exposure convention and be invalidated on camera cuts, resize, and incompatible setting changes.
 
-Tutor: expand every required concept above into a full, accessible explanation: meaning, purpose, mechanism, connection to existing code, and a worked example or boundary case. Explain unfamiliar Swift/MSL syntax and mathematical variables. These paragraphs are a coverage outline, not the entire theory lesson. Demonstrate predictions yourself here; ask the learner questions only in the final section.
+Tutor: expand every required concept above into a full, accessible explanation: meaning, purpose, mechanism, connection to existing code, and a worked example or boundary case. Explain unfamiliar Swift/MSL syntax and mathematical variables. These paragraphs are a coverage outline, not the entire theory lesson. Explain the concepts needed for each step and demonstrate predictions yourself; ask understanding questions only in the final section of the entire lesson.
 
 ## 4. Explained implementation walkthrough
 
-Present the following task IDs as connected sections of the same complete teaching message. For each change, explain the theory and show clear Swift/MSL snippets, naming the actual file, type/function, add/replace action, insertion anchor, and dependencies. Explain the important lines and expected behavior. Do not stop for answers, code submissions, or a commit between sections. Wording below such as “predict,” “ask,” or “test” is a coverage cue: demonstrate it as a worked example here, or include a required implementation check in the final section. Exploratory changes and extra variations are optional, even when an older task description uses imperative wording.
+Use these task IDs to plan manageable teaching steps across messages. Deliver one coherent step at a time, grouping related tasks or splitting a large task as needed. Explain the theory and show clear Swift/MSL snippets with the actual file, type/function, add/replace action, insertion anchor, and dependencies. First check whether affected files have clear responsibilities; teach a focused extraction before adding code if needed. Include expected behavior and relevant implementation checks, then pause for the learner to apply the step or ask for help. Keep understanding questions and learner calculations until the end of the entire lesson; demonstrate predictions yourself in earlier steps. Do not require per-step commits or formal reviews. Exploratory changes and extra variations remain optional.
 
 1. **Task 29.1.** Freeze wind, particles, and camera. Implement a small known jitter sequence and an accumulation view for a static scene. Verify subpixel shifts numerically and reset history on resize.
 
@@ -54,7 +54,7 @@ Read only what resolves the current question. Build a modest educational TAA fir
 
 ## 7. Practice, questions, and submission — after the whole lesson
 
-Present this consolidated section only after all of the lesson theory, code explanations, and expected behavior. The learner can then apply the walkthrough at their own pace. Do not require a reply or review between the earlier walkthrough sections.
+Present this consolidated section after the final teaching step, once all lesson theory and code have been explained. The learner may already have applied earlier steps. Collect all understanding questions here, along with the final checklist and submission directions; do not distribute quizzes across step boundaries.
 
 ### Optional exploration — not required for completion
 

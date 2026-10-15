@@ -40,7 +40,9 @@ Set attachment formats, load/store actions, and texture usage based on how each 
 
 ## Organization that grows with the project
 
-Begin with an app host, renderer, and one shader file. Add mesh, camera, material, scene, and pass types when they have concrete responsibilities. Suggested folders eventually include `App`, `Renderer`, `Scene`, `Shaders`, `Assets`, and `learning`; these names are guidance, not required architecture.
+Begin with an app host, renderer, and one shader file. Before extending a file in a teaching step, assess whether its responsibilities remain clear. Extract math, geometry, camera/input, data layout, allocation, material, scene, or pass code into focused homes when it has an independent responsibility. Teach small extractions before adding features rather than allowing Renderer.swift or another file to become a catch-all. Keep Renderer focused on frame orchestration and coordination, with resource lifetimes and synchronization explicit. Use responsibility boundaries rather than arbitrary line limits; avoid speculative engine architecture and unnecessary tiny files.
+
+After lesson 05, reuse GPUData.swift, TransformMath.swift, MeshGeometry.swift, and SceneResources.swift. Explain symbol moves and caller/access changes, remove old definitions, and preserve behavior. Suggested folders eventually include `App`, `Renderer`, `Scene`, `Shaders`, `Assets`, and `learning`; these names are guidance, not required architecture.
 
 Maintain a minimal debug panel or keyboard controls for camera reset, time pause, technique toggles, and intermediate render targets. Reuse a few fixed camera positions for comparisons. Keep a fixed random seed for generated scenery.
 

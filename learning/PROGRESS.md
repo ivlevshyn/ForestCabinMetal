@@ -5,7 +5,7 @@
 - Swift experience: learning Swift syntax alongside Metal; explain unfamiliar syntax.
 - Graphics experience at course start: none.
 - Project: interactive forest cabin diorama.
-- Teaching preference (updated 2026-10-03): thorough, easy-to-understand theory without skipped prerequisites; explained Swift/MSL code snippets with exact file/function placement; the whole lesson in one substantial message when practical. Put independent practice, questions, and commit/review directions only at the end of the whole lesson. Experiments and extra variations are optional, require no report, and cannot block completion. The learner applies and runs the code; hints-first and task-by-task chat gates are not the default.
+- Teaching preference (updated 2026-10-16): teach lessons in manageable steps across messages, one coherent step per response by default, then pause for the learner to apply it or ask for help. Preserve thorough plain-language theory, worked examples, and explained Swift/MSL snippets with exact placement. Keep understanding questions at the end of the entire lesson; steps may include implementation/run checks. Give the consolidated checklist and commit/review directions after the final step. Experiments remain optional; hints-first is opt-in; no per-step quizzes or mandatory commits. Proactively inspect file responsibilities and teach small extractions before files become bloated, as Renderer.swift did before lesson 05. This replaces single-message delivery; the learner still applies and runs the code.
 - Mac chip: Apple M5 Max (learner-reported).
 - RAM: 48 GB (learner-reported).
 - macOS version: 27.0.1 (learner-reported).
@@ -84,13 +84,17 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | --- | --- | --- |
 | Edition 2 | Metal 4 from lesson 01 through the entire course | Explicit learner preference; replaces edition 1 |
 | 2026-10-03 | Larger related coding steps with explained snippets | Earlier preference, refined by the whole-lesson delivery decision below. |
-| 2026-10-03 | Thorough theory, placed code snippets, and whole-lesson delivery | Teach in one coherent message where practical; reserve practice, questions, and commit/review for the end. Supersedes one-task-per-message and hints-first defaults. |
+| 2026-10-03 | Thorough theory, placed code snippets, and whole-lesson delivery | Historical single-message preference, superseded by step-based delivery on 2026-10-16. Thorough explanation and hints-first opt-in remain. |
 | 2026-10-12 | Close lesson 04 without another understanding answer | Explicit learner instruction; lesson 04 is Complete after source review and learner-reported working behavior. Tutor explanations remain distinguished from learner answers. |
 | 2026-10-13 | Extract GPUData, TransformMath, MeshGeometry, and SceneResources during lesson 05 | Learner raised Renderer.swift's growing responsibilities; retain frame orchestration and animation in Renderer for now. |
 | 2026-10-13 | Adapt lesson 05's pipeline-depth-format instruction to the actual Metal 4 API | The inspected SDK's MTL4RenderPipelineDescriptor has no depthAttachmentPixelFormat. Configure MTKView depth texture, render-pass actions, and MTLDepthStencilState; retain matching color format and sample count. |
 | 2026-10-16 | Close lesson 05 after final source fix, follow-up answers, and learner confirmation | Learner reported completion and authorized the progress update. Preserve the limits of runtime evidence; no GPU execution or capture verification by the reviewer is implied. |
+| 2026-10-16 | Teach lessons in steps across messages; questions remain at the lesson end | Explicit learner preference supersedes single-message delivery. Pause after each coherent step; no per-step quizzes or mandatory commits. |
+| 2026-10-16 | Prevent file bloat proactively | Inspect responsibilities before every implementation step; teach small extractions before adding unrelated code, preserving ownership and behavior. |
 
 ## Latest session handoff
+
+Teaching guidance update, 2026-10-16: future lessons use manageable steps across messages, with understanding questions only after the final step. Inspect file responsibilities before extending them and teach small extractions before bloat develops. Lesson 05 remains Complete; this documentation update does not change the reviewed code or begin lesson 06.
 
 Lesson 05, tasks 05.1–05.5, is Complete at code commit 615e277068c1e07e9ca8257006b2eff0f3cd1a0d, reviewed against baseline 9c0ad8b6e96f2cefbc65abaf4e3baeb8f7c44ea5. Initial review inspected the source and baseline diff at 3b8c2bcabd08db174873ca4e8fa066b1df2a5147; follow-up reviews inspected changes at 1d2c667b0f07a28b264c21860a5cb13bc3a71291 and 615e277068c1e07e9ca8257006b2eff0f3cd1a0d. Files inspected: Renderer.swift, TransformMath.swift, GPUData.swift, MeshGeometry.swift, SceneResources.swift, Shaders.metal, MetalView.swift, ContentView.swift, and ForestCabinMetalApp.swift. No blocking source findings remain.
 
