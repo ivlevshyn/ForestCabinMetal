@@ -91,5 +91,10 @@ func verifyProjectionMath() {
     let close = p * SIMD4<Float>(1, 0, -2, 1)
     let distant = p * SIMD4<Float>(1, 0, -4, 1)
     
-//    assert(abs(close.x / close.w - 2 * distant.x - distant.w) < 0.001)
+    assert(
+        abs(
+            close.x / close.w
+            - 2 * (distant.x / distant.w)
+        ) < 0.0001
+    )
 }

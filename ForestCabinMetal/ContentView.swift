@@ -24,7 +24,7 @@ struct ContentView: View {
             MetalView(
                 animationPaused: animationPaused,
                 resetID: resetID,
-                sceneActive: scenePhase == .active).frame(maxWidth: 320, maxHeight: 240)
+                sceneActive: scenePhase == .active).frame(minWidth: 320, minHeight: 240)
             
         }
         
