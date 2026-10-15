@@ -18,13 +18,13 @@
 
 ## Current position
 
-- Current lesson: 03.
-- Current task: 03.1–03.5 complete; paused after final review.
-- Last reviewed code SHA: 526aca74fe3435aeac09cbae61aabea0640f4941.
-- Current code SHA: 526aca74fe3435aeac09cbae61aabea0640f4941 (this progress-only update does not change the reviewed implementation).
-- Next action: wait for the learner to request lesson 04; do not begin it yet.
+- Current lesson: 04.
+- Current task: 04.1–04.5 Complete; paused after review and learner confirmation.
+- Last reviewed code SHA: 030525fc7c06f6b2a5e24363f13cba59a1c53fb5.
+- Current code SHA: 030525fc7c06f6b2a5e24363f13cba59a1c53fb5 (this progress-only update does not change the reviewed implementation).
+- Next action: wait for the learner to request lesson 05; do not begin it yet.
 - Current blocker: none known.
-- Runtime evidence location: learner reports in the teaching conversation; no screenshot or GPU capture committed.
+- Runtime evidence location: learner reported "Everything works as expected" in the teaching conversation on 2026-10-12. No specific lesson 04 GPU capture observations or media were supplied in this conversation.
 
 ## Review ledger
 
@@ -35,7 +35,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 01 | Your first Metal 4 frame | Complete | ecaa90797bcfbb48951a23217d1b189298e73ff5 | 2026-10-03: source reviewed; learner reported colored output, color variation, resize/minimize/restore, skipped submission, and successful restoration. Reviewer did not execute Metal. |
 | 02 | A triangle and the graphics pipeline | Complete | 826145a5387295f40dd314be31b9356057ce07c1 | 2026-10-03: source and baseline diff reviewed; learner reported expected lesson behavior and confirmed the requested Xcode GPU-debug capture checks. Understanding answers reviewed with clarifications. Reviewer did not execute Metal. |
 | 03 | Send geometry from Swift to the GPU | Complete | 526aca74fe3435aeac09cbae61aabea0640f4941 | 2026-10-04: source and baseline diff reviewed; learner confirmed both colored panels, resize/minimize/restore without validation errors, expected layout/count logs, and GPU capture checks for twelve UInt16 indices and vertex-stage buffer slot 0. Understanding answers reviewed with clarifications. Reviewer did not execute Metal. |
-| 04 | Move geometry with transforms and time | Not started | — | — |
+| 04 | Move geometry with transforms and time | Complete | 030525fc7c06f6b2a5e24363f13cba59a1c53fb5 | 2026-10-12: source and baseline diff reviewed; no blocking source issues found. Learner reported everything works as expected. Mesh-preservation answer discussed; tutor explained the other answers. Marked Complete at the learner's explicit request without a further understanding answer. Reviewer did not build or execute Metal. |
 | 05 | Enter 3D with perspective and depth | Not started | — | — |
 | 06 | Explore the cabin with an orbit camera | Not started | — | — |
 | 07 | Build the cabin from reusable meshes | Not started | — | — |
@@ -74,6 +74,8 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 - Lesson 03: reinforce that creating a buffer allocates storage while retaining it keeps the object and allocation alive; residency enables GPU access and argument-table binding connects the address to a shader slot. Indexing saves memory when full-record reuse outweighs index storage. Stride includes array spacing required by alignment/padding. A shared position may need separate records when normals or UV coordinates differ.
 
+- Lesson 04: learner identified preserving an initial state as a reason to keep mesh positions unchanged. Tutor expanded this to separating shape from placement and reusing one mesh for multiple objects. Tutor explained rightmost-first T × R × S order, the worked point result (0.3, 1.2, 0, 1), points with W = 1 versus directions with W = 0, and binding snapshots versus buffer contents. These tutor explanations must not be recorded as learner-provided answers. The learner explicitly requested completion without a further understanding answer. Reinforce these concepts naturally in later lessons; no outstanding answer blocks completion.
+
 ## Decisions and adaptations
 
 | Date | Decision | Reason / affected lessons |
@@ -82,7 +84,21 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 2026-10-03 | Larger related coding steps with explained snippets | Earlier preference, refined by the whole-lesson delivery decision below. |
 | 2026-10-03 | Thorough theory, placed code snippets, and whole-lesson delivery | Teach in one coherent message where practical; reserve practice, questions, and commit/review for the end. Supersedes one-task-per-message and hints-first defaults. |
 
+| 2026-10-12 | Close lesson 04 without another understanding answer | Explicit learner instruction; lesson 04 is Complete after source review and learner-reported working behavior. Tutor explanations remain distinguished from learner answers. |
+
 ## Latest session handoff
+
+Lesson 04, tasks 04.1–04.5, is Complete at code commit 030525fc7c06f6b2a5e24363f13cba59a1c53fb5, reviewed against baseline 65b4c01073325d715a5c53f1b11957722e26b92b. Review inspected Renderer.swift, Shaders.metal, MetalView.swift, ContentView.swift, and their baseline diff. No blocking source issues were found. No application files were changed by the tutor.
+
+The implementation stores one centered panel with four vertices and six UInt16 indices, then draws it twice with independent model matrices. Matrix constructors use columns and model = translation × rotation × scale. Swift GPUUniforms and MSL GPUUniforms agree on one float4x4; preparation checks size/stride 64, alignment 16, and model offset 0. Two separate shared uniform buffers are retained, registered in the committed app residency set, and exposed through vertex-stage argument-table slot 1. Mesh vertices remain at slot 0. Uniform writes and allocator reset occur after the existing single-frame completion gate. Both indexed draws reuse the same mesh while selecting distinct uniform addresses. Existing Metal 4 submission, drawable retention, view/layer residency, and event signaling remain intact.
+
+Animation uses measured time in seconds, with a gentle sinusoidal Z rotation. Pause/resume and reset flow from ContentView through MetalView to the retained renderer. Scene inactivity clears the timestamp, and intervals greater than 0.25 seconds are discarded to avoid a suspension jump. The view requests 60 FPS. Both panels use scale (0.58, 0.70, 1), a valid adaptation from the teaching example. ContentView caps the Metal view at 640 × 480 rather than setting a minimum; this is not a lesson 04 blocker.
+
+On 2026-10-12, the learner reported that everything works as expected. This is learner-provided runtime evidence, not reviewer execution. The reviewer did not build or execute the macOS Metal app, run its assertions, or personally inspect an Xcode GPU capture. The general report does not establish separate capture observations, measured refresh-rate comparisons, or validation logs.
+
+The learner answered the mesh-preservation question by identifying the need for an initial state to return to, then requested explanations of the other questions. The tutor supplied those explanations. The learner then explicitly requested that lesson 04 be marked Complete without another understanding answer. On 2026-10-12, the status was updated accordingly, based on the source review with no blockers, the learner's reported working behavior, and their instruction to close the lesson. No additional learner answer or reviewer runtime verification is implied. No code correction is currently required. Next action: wait for the learner to request lesson 05. Lesson 05 remains Not started and must not begin automatically.
+
+## Previous lesson 03 handoff
 
 Lesson 03 is Complete at code commit 526aca74fe3435aeac09cbae61aabea0640f4941, reviewed against baseline 7c8ff82a00cd30375d0ed9c0c4bcbd8734853798. The reviewed head includes implementation commit 66641ac9b6c1b6885b15538b80b7bc1d2254236b and the subsequent merge. Review inspected Renderer.swift, Shaders.metal, MetalView.swift, and the implementation diff. No blocking source issues were found.
 
@@ -92,7 +108,7 @@ On 2026-10-04, the learner confirmed both colored panels, resize/minimize/restor
 
 Understanding answers covered reuse through indices, array spacing, the distinct resource responsibilities, and the eight-vertex/twelve-index/four-triangle count. The tutor clarified allocation versus retention, the index-storage tradeoff, and separate records for differing UVs or normals. Reinforce these distinctions naturally rather than repeating the lesson.
 
-Lesson 04 remains Not started. Resume only when requested, reading its lesson and inspecting the current code before presenting the complete lesson with theory and placed snippets.
+The historical pause before lesson 04 was superseded by the learner's request to begin it on 2026-10-06. See the latest lesson 04 handoff above.
 
 ## Previous lesson 02 handoff
 
