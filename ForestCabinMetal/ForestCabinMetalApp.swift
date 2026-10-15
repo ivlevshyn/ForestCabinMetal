@@ -1,10 +1,3 @@
-//
-//  ForestCabinMetalApp.swift
-//  ForestCabinMetal
-//
-//  Created by Ivan Levshyn on 02/10/2026.
-//
-
 import SwiftUI
 import Metal
 

@@ -1,10 +1,3 @@
-//
-//  Shaders.metal
-//  ForestCabinMetal
-//
-//  Created by Ivan Levshyn on 03/10/2026.
-//
-
 #include <metal_stdlib>
 using namespace metal;
 
@@ -15,6 +8,8 @@ struct GPUVertex {
 
 struct GPUUniforms {
     float4x4 model;
+    float4x4 view;
+    float4x4 projection;
 };
 
 struct TriangleVertexOutput {
@@ -30,7 +25,7 @@ vertex TriangleVertexOutput triangleVertex(
     GPUVertex gpuvertex = vertices[vertexID];
     
     TriangleVertexOutput output;
-    output.position = uniforms.model * gpuvertex.position;
+    output.position = uniforms.projection * uniforms.view * uniforms.model * gpuvertex.position;
     output.color = gpuvertex.color.xyz;
     
     return output;

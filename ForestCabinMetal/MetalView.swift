@@ -1,10 +1,3 @@
-//
-//  MetalView.swift
-//  ForestCabinMetal
-//
-//  Created by Ivan Levshyn on 02/10/2026.
-//
-
 import Foundation
 import SwiftUI
 import MetalKit
@@ -32,6 +25,11 @@ struct MetalView : NSViewRepresentable {
         }
         
         view.colorPixelFormat = .bgra8Unorm_srgb
+        view.depthStencilPixelFormat = .depth32Float
+        view.depthStencilStorageMode = .private
+        view.sampleCount = 1
+        view.clearDepth = 1
+        view.autoResizeDrawable = true
         
         do {
             try context.coordinator.prepare(device: device, view: view)

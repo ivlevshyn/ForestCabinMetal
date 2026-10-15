@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  ForestCabinMetal
-//
-//  Created by Ivan Levshyn on 02/10/2026.
-//
-
 import SwiftUI
 
 struct ContentView: View {
@@ -31,7 +24,7 @@ struct ContentView: View {
             MetalView(
                 animationPaused: animationPaused,
                 resetID: resetID,
-                sceneActive: scenePhase == .active).frame(maxWidth: 640, maxHeight: 480)
+                sceneActive: scenePhase == .active).frame(maxWidth: 320, maxHeight: 240)
             
         }
         
