@@ -1,42 +1,42 @@
-# Whole-lesson response template
+# Step-based lesson delivery template
 
-Read TEACHING before using this template. Deliver one coherent lesson message where practical. Internal headings organize the explanation; they are not requests for a reply between sections. Use the actual repository at the stated commit.
+Read TEACHING before using this template. Teach a lesson over multiple messages, one coherent step per response by default. At the start, briefly map the steps, then deliver only the current step. Use the inspected repository and actual learner progress.
 
-## 1. Outcome and starting point
+## 1. Current step and outcome
 
-Explain the visible result, why the cabin needs it, and which current files and concepts it extends. Use PROGRESS rather than repeating onboarding. If access or a critical prerequisite is missing, resolve that specifically before pretending to give an exact walkthrough.
+Name the lesson and step/task ID. Explain its result, why the cabin needs it, and its connection to prior work. Use PROGRESS rather than repeating onboarding. Resolve essential access or prerequisite issues before claiming an exact walkthrough.
 
-## 2. Theory explained from the foundations
+## 2. Theory for this step
 
-Expand every required lesson concept into plain-language meaning, purpose, mechanism, and its connection to the project. Define terms and unfamiliar syntax. Use worked examples, small calculations, or diagrams when helpful. Explain the expected result yourself here; questions for the learner come at the end. Do not merely paste the short concept list from the lesson file.
+Explain the required concepts fully: meaning, purpose, mechanism, connection, and worked examples. Define unfamiliar syntax and mathematical variables. Demonstrate calculations and predictions yourself. Preserve thorough explanations across the sequence; do not front-load the entire lesson's theory or replace explanation with a quiz.
 
-## 3. Explained implementation walkthrough
+## 3. File responsibilities before adding code
 
-Introduce the implementation structure, then show coherent snippets in dependency order. For each snippet use a placement block like this:
+Inspect the affected files and say where the new responsibility belongs. If a file is accumulating unrelated jobs, teach a focused extraction in this step or a preparatory step. Explain which symbols move, their new paths, and old definitions/callers to update. Preserve ownership, residency, synchronization, and CPU/MSL layouts. Avoid arbitrary line limits, speculative architecture, and unnecessary tiny files.
 
-- **File:** exact repository-relative path; state explicitly if it is new.
+## 4. Explained implementation
+
+Show coherent snippets in dependency order. For each snippet provide:
+
+- **File:** exact repository-relative path; explicitly identify a new file.
 - **Location:** existing type/function or new shader entry point.
-- **Action:** add / replace / remove, with a stable anchor.
-- **Dependencies:** imports, properties, helper definitions, target membership, earlier snippets.
+- **Action:** add / replace / remove / move, with a stable anchor.
+- **Dependencies:** imports, properties, helpers, target membership, access-control changes, and earlier snippets.
 
-Explain why the change is needed, show clear code, then explain the important lines and their effect. Complete functions or short shaders are allowed when clearer than fragments. Keep demonstrated code coherent with the current project and identify any omitted surrounding code explicitly.
+Explain the purpose before the code and the important lines afterward. Complete functions or short shaders are welcome when clearer than fragments. Identify omitted surrounding code explicitly. Ground placement in inspected source; do not assume every change belongs in Renderer.swift.
 
-For this repository, a placement instruction may refer to `ForestCabinMetal/Renderer.swift`, `Renderer.prepare(device:view:)`, or `Renderer.draw(in:)` only after checking that the current commit still contains them. Future files must be introduced as new, not described as though they already exist.
+## 5. Expected behavior and step boundary
 
-Do not stop for an answer after each snippet. Expected results and debug symptoms may be explained inline, but offer any experiments only as optional suggestions in the final section.
+Describe the result, likely mistakes, and a short apply/run checklist for this step. Pause here so the learner can implement it, ask for help, or request the next step. Do not append the next step automatically. Do not require a specific acknowledgment word, a quiz, a commit, or a formal review at each boundary. Answer learner questions and debug as needed before resuming.
 
-## 4. Expected result, common mistakes, and recap
+## 6. Final step only: practice, questions, and submission
 
-Explain what the completed implementation should do, how the new data flows through the frame, and the few failure modes most likely to confuse a beginner. End the teaching portion with a concise conceptual recap.
+After all teaching steps, provide:
 
-## 5. Practice, questions, and submission
-
-Only here give the learner:
-
-1. A checklist for applying the lesson and running it.
-2. Optional exploration suggestions only if useful; experiments and extra variations are never required and need no report.
-3. Understanding questions grouped together.
-4. Acceptance criteria and the runtime evidence worth recording.
+1. A consolidated checklist for the complete lesson.
+2. Optional exploration ideas if useful; no experiment report is required.
+3. All understanding questions together, with duplicates removed.
+4. Acceptance criteria and relevant runtime evidence to record.
 5. Commit/push directions and an exact-SHA review prompt.
 
-If a genuine limit forces multiple teaching messages, state why and place this consolidated final section after the last teaching part. Do not demand intermediate quizzes or commits. Follow-up debugging can be interactive when the learner asks for help.
+Do not put understanding questions at the ends of earlier steps. Necessary setup and debugging questions remain allowed. Record the current step and implementation status when making a session handoff; reading a step does not prove it was implemented.

@@ -6,7 +6,7 @@ References were selected against official Apple pages and primary technical mate
 
 1. State the exact question you are trying to answer.
 2. Read the smallest relevant section with the tutor.
-3. Have the tutor explain the relevant idea fully with a worked example and its cabin implementation; use it in the final practice section.
+3. Have the tutor explain the relevant idea fully in the current teaching step, with a worked example and its cabin implementation. Keep understanding questions for the end of the entire lesson.
 4. Record any convention or version-dependent choice in the project.
 
 Do not open a sample and copy its entire renderer. If a link moves, search its exact title on Apple Developer or the author's official site and record the replacement. For code-level questions, prefer official API documentation, specifications, or author-published technical notes.

@@ -24,7 +24,7 @@ If the learner cannot run the needed OS/SDK, explain the exact blocker and discu
 | 24 | GPU-generated indirect arguments and IDs with explicit synchronization |
 | 32 | Optional deeper compilation scheduling/caching study |
 
-The table spans the whole course; cover all responsibilities assigned to the requested lesson, not future topics. Explain them thoroughly with worked examples and snippets in one lesson message where practical. Put implementation checks, questions, and submission directions in the final section. Experiments are optional and cannot block completion.
+The table spans the whole course; cover all responsibilities assigned to the requested lesson, not future topics. Explain them thoroughly with worked examples and snippets across manageable teaching steps. Include relevant implementation checks with each step; keep understanding questions and submission directions until the end of the entire lesson. Check file responsibilities before extending code and preserve ownership, residency, and synchronization during any focused extraction. Experiments are optional and cannot block completion.
 
 ## The API names that matter
 
