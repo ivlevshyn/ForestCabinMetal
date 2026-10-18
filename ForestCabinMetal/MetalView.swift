@@ -7,13 +7,25 @@ struct MetalView : NSViewRepresentable {
     var animationPaused: Bool = false
     var resetID: Int = 0
     var sceneActive: Bool = true
-    
+    var cameraPreset: OrbitCamera.Preset = .baseline
+    var cameraRequestID: Int = 0
+
     func makeNSView(context: Context) -> MTKView{
-        let view = MTKView(
+        let view = CameraMTKView(
             frame: .zero,
             device: MTLCreateSystemDefaultDevice()
         )
-        
+
+        let renderer = context.coordinator
+
+        view.onOrbit = { [weak renderer] horizontal, vertical in
+            renderer?.orbitCamera(horizontal: horizontal, vertical: vertical)
+        }
+
+        view.onZoom = { [weak renderer] scroll in
+            renderer?.zoomCamera(scroll: scroll)
+        }
+
         view.isPaused = true
         view.enableSetNeedsDisplay = false
         view.preferredFramesPerSecond = 60
@@ -35,7 +47,10 @@ struct MetalView : NSViewRepresentable {
             try context.coordinator.prepare(device: device, view: view)
             
             context.coordinator.setAnimationControls(paused: animationPaused, resetID: resetID, sceneActive: sceneActive)
-            
+
+            context.coordinator
+                .setCameraPreset(cameraPreset, requestID: cameraRequestID)
+
             view.isPaused = false
         } catch {
             print("Cannot prepare renderer: \(error)")
@@ -46,6 +61,9 @@ struct MetalView : NSViewRepresentable {
     
     func updateNSView(_ nsView: MTKView, context: Context){
         context.coordinator.setAnimationControls(paused: animationPaused, resetID: resetID, sceneActive: sceneActive)
+
+        context.coordinator
+            .setCameraPreset(cameraPreset, requestID: cameraRequestID)
     }
     
     func makeCoordinator() -> Renderer {

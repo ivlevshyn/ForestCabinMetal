@@ -76,6 +76,45 @@ func makePerspective(
     ))
 }
 
+func makeLookAt(
+    eye: SIMD3<Float>,
+    target: SIMD3<Float>,
+    upReference: SIMD3<Float> = SIMD3<Float>(0, 1, 0)
+) -> simd_float4x4 {
+    let toTarget = target - eye
+
+    precondition(
+        simd_length_squared(toTarget) > 0.0000001,
+        "Camera eye position must not be the same as the target."
+    )
+
+    precondition(
+        simd_length_squared(upReference) > 0.00000001,
+        "Up direction vector must not be zero."
+    )
+
+    let forward = simd_normalize(toTarget)
+    let uphint = simd_normalize(upReference)
+    let rightCandidate = simd_cross(forward, uphint)
+
+    precondition(
+        simd_length_squared(rightCandidate) > 0.00000001,
+        "Camera forward and up reference vectors must not be parallel."
+    )
+
+    let right = simd_normalize(rightCandidate)
+    let up = simd_cross(right, forward)
+    let backward = -forward
+
+    return simd_float4x4(columns: (
+        SIMD4<Float>(right.x, up.x, backward.x, 0),
+        SIMD4<Float>(right.y, up.y, backward.y, 0),
+        SIMD4<Float>(right.z, up.z, backward.z, 0),
+        SIMD4<Float>(-simd_dot(right, eye), -simd_dot(up, eye), -simd_dot(backward, eye), 1)
+    )
+    )
+}
+
 func verifyProjectionMath() {
     let near: Float = 0.1
     let far: Float = 30
@@ -96,5 +135,29 @@ func verifyProjectionMath() {
             close.x / close.w
             - 2 * (distant.x / distant.w)
         ) < 0.0001
+    )
+}
+
+func verifyCameraMath() {
+    let eye = SIMD3<Float>(4, 3, 6)
+    let target = SIMD3<Float>(0, 0.75, 0)
+    let view = makeLookAt(eye: eye, target: target)
+
+    let eyeInView = view * SIMD4<Float>(
+        eye.x, eye.y, eye.z, 1
+    )
+
+    let targetInView = view * SIMD4<Float>(
+        target.x, target.y, target.z, 1
+    )
+
+    let distance = simd_length(target - eye)
+
+    assert(
+        simd_length(eyeInView - SIMD4<Float>(0, 0, 0, 1)) < 0.0001
+    )
+
+    assert(
+        simd_length(targetInView - SIMD4<Float>(0,0, -distance, 1)) < 0.0001
     )
 }
