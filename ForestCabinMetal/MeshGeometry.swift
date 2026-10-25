@@ -5,6 +5,27 @@ struct MeshData {
     var vertices: [GPUVertex] = []
     var indices: [UInt16] = []
 
+    mutating func addTriangle(
+        _ a: SIMD3<Float>,
+        _ b: SIMD3<Float>,
+        _ c: SIMD3<Float>,
+        color: SIMD4<Float>
+    ) {
+        precondition(vertices.count <= Int(UInt16.max) - 2)
+        let base = UInt16(vertices.count)
+
+        for p in [a, b, c] {
+            vertices.append(
+                GPUVertex(
+                    position: SIMD4<Float>(p.x, p.y, p.z, 1),
+                    color: color
+                )
+            )
+        }
+
+        indices += [base, base + 1, base + 2]
+    }
+
     mutating func addQuad(
         _ a: SIMD3<Float>,
         _ b: SIMD3<Float>,
@@ -97,6 +118,29 @@ func makeGroundMesh() -> MeshData {
         [-3, 0, -3],
         color: [0.12, 0.24, 0.10, 1]
     )
+
+    return mesh
+}
+
+func makeRoofMesh() -> MeshData {
+    var mesh = MeshData()
+    let color = SIMD4<Float>(1, 1, 1, 1)
+
+    let frontLeft = SIMD3<Float>(-0.5, -0.5, 0.5)
+    let frontRight = SIMD3<Float>(0.5, -0.5, 0.5)
+    let frontPeak = SIMD3<Float>(0, 0.5, 0.5)
+
+    let backLeft = SIMD3<Float>(-0.5, -0.5, -0.5)
+    let backRight = SIMD3<Float>(0.5, -0.5, -0.5)
+    let backPeak = SIMD3<Float>(0, 0.5, -0.5)
+
+    mesh.addTriangle(frontLeft, frontRight, frontPeak, color: color)
+
+    mesh.addTriangle(backRight, backLeft, backPeak, color: color)
+
+    mesh.addQuad(backLeft, frontLeft, frontPeak, backPeak, color: color)
+    mesh.addQuad(frontRight, backRight, backPeak, frontPeak, color: color)
+    mesh.addQuad(backLeft, backRight, frontRight, frontLeft, color: color)
 
     return mesh
 }

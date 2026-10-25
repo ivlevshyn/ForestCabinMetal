@@ -113,27 +113,9 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let view = camera.viewMatrix
 
-        let angle = Float(
-            (0.4 * animationTime).truncatingRemainder(dividingBy: 2 * Double.pi)
-        )
-
-        let model =
-            makeTranslation([0, 0.75, 0]) * makeRotationY(0.4 + angle)
-            * makeScale([1.5, 1.5, 1.5])
-
-        scene.writeUniforms(
-            model: model,
-            view: view,
-            projection: projection,
-            to: scene.boxUniforms
-        )
-
-        scene.writeUniforms(
-            model: matrix_identity_float4x4,
-            view: view,
-            projection: projection,
-            to: scene.groundUniforms
-        )
+        for object in scene.objects {
+            object.writeUniforms(view: view, projection: projection)
+        }
     }
 
     private func encodeMesh(
@@ -229,7 +211,7 @@ class Renderer: NSObject, MTKViewDelegate {
             return
         }
 
-        encoder.label = "Lesson 05: box and ground"
+        encoder.label = "Lesson 07: cabin blockout"
         encoder.setRenderPipelineState(pipeline)
         encoder.setDepthStencilState(depthState)
 
@@ -247,19 +229,14 @@ class Renderer: NSObject, MTKViewDelegate {
         encoder.setFrontFacing(.counterClockwise)
         encoder.setCullMode(.back)
 
-        encodeMesh(
-            scene.box,
-            uniforms: scene.boxUniforms,
-            arguments: scene.arguments,
-            encoder: encoder
-        )
-
-        encodeMesh(
-            scene.ground,
-            uniforms: scene.groundUniforms,
-            arguments: scene.arguments,
-            encoder: encoder
-        )
+        for object in scene.objects {
+            encodeMesh(
+                object.mesh,
+                uniforms: object.uniforms,
+                arguments: scene.arguments,
+                encoder: encoder
+            )
+        }
 
         encoder.endEncoding()
         buffer.endCommandBuffer()

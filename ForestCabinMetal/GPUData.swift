@@ -10,6 +10,7 @@ struct GPUUniforms{
     var model: simd_float4x4
     var view: simd_float4x4
     var projection: simd_float4x4
+    var baseColor: SIMD4<Float>
 }
 
 func verifyGPULayouts() throws {
@@ -22,12 +23,13 @@ func verifyGPULayouts() throws {
         throw RendererSetupError.vertexLayoutMismatch
     }
     
-    guard MemoryLayout<GPUUniforms>.size == 192,
-          MemoryLayout<GPUUniforms>.stride == 192,
+    guard MemoryLayout<GPUUniforms>.size == 208,
+          MemoryLayout<GPUUniforms>.stride == 208,
           MemoryLayout<GPUUniforms>.alignment == 16,
           MemoryLayout<GPUUniforms>.offset(of: \GPUUniforms.model) == 0,
           MemoryLayout<GPUUniforms>.offset(of: \GPUUniforms.view) == 64,
-          MemoryLayout<GPUUniforms>.offset(of: \GPUUniforms.projection) == 128 else {
+          MemoryLayout<GPUUniforms>.offset(of: \GPUUniforms.projection) == 128,
+          MemoryLayout<GPUUniforms>.offset(of: \GPUUniforms.baseColor) == 192 else {
         throw RendererSetupError.uniformLayoutMismatch
     }
 }

@@ -9,8 +9,8 @@ struct OrbitCamera {
         case elevated = "Elevated"
     }
 
-    private(set) var target = SIMD3<Float>(0, 0.75, 0)
-    private(set) var distance: Float = 6.25
+    private(set) var target = SIMD3<Float>(0, 1.7, 0)
+    private(set) var distance: Float = 8
     private(set) var yaw: Float = 0
     private(set) var pitch: Float = atan2(Float(1.75), Float(6))
 

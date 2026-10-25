@@ -10,6 +10,7 @@ struct GPUUniforms {
     float4x4 model;
     float4x4 view;
     float4x4 projection;
+    float4 baseColor;
 };
 
 struct TriangleVertexOutput {
@@ -26,7 +27,7 @@ vertex TriangleVertexOutput triangleVertex(
     
     TriangleVertexOutput output;
     output.position = uniforms.projection * uniforms.view * uniforms.model * gpuvertex.position;
-    output.color = gpuvertex.color.xyz;
+    output.color = uniforms.baseColor.rgb;
     
     return output;
     
