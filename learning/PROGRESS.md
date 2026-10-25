@@ -18,13 +18,13 @@
 
 ## Current position
 
-- Current lesson: 05.
-- Current task: 05.1–05.5 Complete; paused after fixes, review, and learner confirmation.
-- Last reviewed code SHA: 615e277068c1e07e9ca8257006b2eff0f3cd1a0d.
-- Current code SHA: 615e277068c1e07e9ca8257006b2eff0f3cd1a0d (this progress-only update does not change the reviewed implementation).
-- Next action: wait for the learner to request lesson 06; do not begin it yet.
-- Current blocker: none known.
-- Evidence location: lesson 05 teaching/review conversation, ending 2026-10-16 (Europe/Warsaw). The learner answered the follow-up questions and reported "Done. You can update progress" after the final correction and request to confirm behavior. This is a general learner completion confirmation, not a detailed runtime checklist or GPU capture report. Reviewer did not build or run the submitted app.
+- Current lesson: 06.
+- Current task: 06.1–06.5 Complete; paused after source review, learner-reported working behavior, and explicit request to close the lesson.
+- Last reviewed code SHA: 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea.
+- Current code SHA: 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea (this progress-only update does not change the reviewed implementation).
+- Next action: wait for the learner to request lesson 07; do not begin it yet.
+- Current blocker: none known. Clarified camera concepts remain topics to reinforce naturally, not outstanding completion requirements.
+- Evidence location: lesson 06 teaching/review conversation, 2026-10-18 (Europe/Warsaw). The learner confirmed working behavior after each teaching step and after pushing the implementation. The reviewer inspected the submitted source and baseline diff, then compiled and ran the submitted CPU camera/projection assertions and additional numeric orbit/preset checks. The reviewer did not build or run the full app or inspect a GPU capture. After explanations and two proposed understanding follow-ups, the learner explicitly requested that lesson 06 be marked done without providing further answers.
 
 ## Review ledger
 
@@ -37,7 +37,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 03 | Send geometry from Swift to the GPU | Complete | 526aca74fe3435aeac09cbae61aabea0640f4941 | 2026-10-04: source and baseline diff reviewed; learner confirmed both colored panels, resize/minimize/restore without validation errors, expected layout/count logs, and GPU capture checks for twelve UInt16 indices and vertex-stage buffer slot 0. Understanding answers reviewed with clarifications. Reviewer did not execute Metal. |
 | 04 | Move geometry with transforms and time | Complete | 030525fc7c06f6b2a5e24363f13cba59a1c53fb5 | 2026-10-12: source and baseline diff reviewed; no blocking source issues found. Learner reported everything works as expected. Mesh-preservation answer discussed; tutor explained the other answers. Marked Complete at the learner's explicit request without a further understanding answer. Reviewer did not build or execute Metal. |
 | 05 | Enter 3D with perspective and depth | Complete | 615e277068c1e07e9ca8257006b2eff0f3cd1a0d | 2026-10-16: source and baseline diff reviewed; bottom-face error corrected and re-reviewed, projection assertion restored, view sizing corrected. Learner correctly identified the model matrix and rejection under the less-depth rule after explanations, then confirmed completion and authorized this update. No detailed runtime/capture report supplied; reviewer did not build or execute the submitted app. |
-| 06 | Explore the cabin with an orbit camera | Not started | — | — |
+| 06 | Explore the cabin with an orbit camera | Complete | 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea | 2026-10-18: source and baseline diff reviewed; no required source fixes. Submitted CPU assertions and additional numeric camera checks passed. Learner reported expected behavior. Understanding answers reviewed with clarifications; closed at the learner's explicit request without the two further answers. Reviewer did not build or execute the full app. |
 | 07 | Build the cabin from reusable meshes | Not started | — | — |
 | 08 | Give surfaces shape with sunlight | Not started | — | — |
 | 09 | Put wood, bark, and ground on surfaces | Not started | — | — |
@@ -78,6 +78,8 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 - Lesson 05: learner initially could not explain the matrix roles, associated W with projection imperfection/GPU efficiency, described depth testing as culling, and gave near/far input distances rather than normalized depth endpoints. Tutor explained model/view/projection roles, W = -view-space Z and perspective division, stored nearest depth versus back-face culling, camera movement versus FOV, and near/far mapping to 0/1. Learner's FOV answer correctly recognized that both changes can enlarge the object; the relative-distance distinction was supplied by the tutor. In follow-up, learner correctly chose the model matrix for moving only the box and said an incoming depth 0.7 is rejected under .less when 0.4 is stored; tutor made the comparison explicit. Reinforce the other concepts naturally in later lessons without attributing tutor explanations to the learner. No additional answer currently blocks completion.
 
+- Lesson 06: learner correctly explained that the cross product is perpendicular to both inputs and reversing its order flips right to left. Learner also correctly predicted that the box would be behind the camera with reversed forward subtraction, but named the wrong viewing direction. Tutor clarified that target − eye points toward the target (−Z for eye (0, 0, 5) and target at the origin), whereas eye − target points away (+Z). Learner attributed the scene's opposite movement to direction reversal in OrbitCamera and attributed avoiding the pole to a precondition. Tutor explained camera-relative subtraction, the pitch clamp preventing pole alignment during normal input, and a precondition detecting invalid geometry and stopping execution rather than repairing it. The learner explicitly requested completion without answering the two subsequent understanding checks. Reinforce these distinctions naturally; do not attribute tutor explanations to learner answers or require the unanswered checks before continuing.
+
 ## Decisions and adaptations
 
 | Date | Decision | Reason / affected lessons |
@@ -92,7 +94,27 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 2026-10-16 | Teach lessons in steps across messages; questions remain at the lesson end | Explicit learner preference supersedes single-message delivery. Pause after each coherent step; no per-step quizzes or mandatory commits. |
 | 2026-10-16 | Prevent file bloat proactively | Inspect responsibilities before every implementation step; teach small extractions before adding unrelated code, preserving ownership and behavior. |
 
+| 2026-10-18 | Close lesson 06 after review and learner-reported working behavior without further understanding answers | Explicit learner request to mark the lesson done supersedes the provisional Awaiting evidence verdict. No required source fixes remain; preserve the distinction between learner answers, tutor explanations, CPU checks, and full-app runtime evidence. |
+
 ## Latest session handoff
+
+Lesson 06, tasks 06.1–06.5, is Complete at reviewed code commit 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea, compared with baseline ab2c112426cf9cede41d3e2e5eec63e6cc87a5bd. The reviewed merge includes implementation parent f49a187f710d9761d18e2e5d2b79fb43dbbf561b. No required source fixes were found.
+
+Teaching was delivered in three steps: camera basis and look-at construction; orbit state and pointer/scroll controls; named diagnostic poses and resize/focus checks. The learner applied the changes and confirmed expected behavior after each step, then reported that the pushed implementation worked as expected.
+
+File responsibilities: OrbitCamera.swift owns target/distance/yaw/pitch, eye/view calculations, limits, reset, and Baseline/Side/Elevated presets. CameraMTKView.swift owns pointer and scroll-event forwarding. MetalView.swift connects weak callbacks to the retained renderer and forwards pose requests. ContentView.swift owns animation controls and camera-preset requests. TransformMath.swift contains makeLookAt and camera assertions. Renderer.swift retains the active camera and uses its view matrix in the existing per-object uniforms, with the single-frame completion gate protecting GPU-visible writes. MeshGeometry.swift changes are formatting only; existing GPU layouts, shaders, residency, resource retention, and depth behavior are preserved.
+
+The camera uses target (0, 0.75, 0), initial eye (0, 2.5, 6), distance 6.25, yaw 0, and pitch atan2(1.75, 6). Drag sensitivity is 0.005 radians per input unit; yaw wraps by 2π, pitch stays between 0.05 and π/2 − 0.05, and exponential zoom stays within distance 2–12. Baseline restores the initial pose; Side uses yaw π/2; Elevated uses yaw/pitch π/4 and distance 8. A request counter allows the same preset to be reapplied after manual movement without resetting the camera on ordinary SwiftUI updates.
+
+Review inspected the exact source and baseline diff for CameraMTKView.swift, ContentView.swift, MetalView.swift, OrbitCamera.swift, Renderer.swift, TransformMath.swift, and MeshGeometry.swift, plus surrounding GPUData.swift, SceneResources.swift, Shaders.metal, and ForestCabinMetalApp.swift. During review, the reviewer compiled the submitted OrbitCamera.swift and TransformMath.swift in a scratch CPU harness and ran the submitted projection/camera assertions plus numeric checks for initial pose, quarter orbit, repeated angle/distance limits, reset, preset repeatability, expected eye positions, and target mapping. All passed. Earlier teaching snippets were also type-checked together; that is separate from building the submitted app. No full-app build, Metal execution, or GPU-capture inspection was performed by the reviewer.
+
+Understanding and verdict: the learner's cross-product-order answer was correct, and the behind-camera outcome was correct while its direction needed correction. The tutor explained camera-relative subtraction, pitch prevention versus precondition detection, and correct versus reversed forward direction. The provisional verdict was Awaiting evidence for two short understanding follow-ups, with no required source fixes. The learner then explicitly requested, “Ok, you can update progress with this lesson marked as done.” Lesson 06 is therefore Complete at the learner's request without those additional answers. Tutor explanations remain distinguished from demonstrated learner answers. There is no outstanding answer or code correction blocking continuation.
+
+This is a progress-only update; the reviewed implementation remains 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea. Preserve the earlier lesson records below. Next action: wait for the learner to request lesson 07 (cabin blockout); lesson 07 remains Not started.
+
+## Previous lesson 05 handoff
+
+The historical pause before lesson 06 below was superseded by the learner's request to start lesson 06 and the completed review recorded above.
 
 Teaching guidance update, 2026-10-16: future lessons use manageable steps across messages, with understanding questions only after the final step. Inspect file responsibilities before extending them and teach small extractions before bloat develops. Lesson 05 remains Complete; this documentation update does not change the reviewed code or begin lesson 06.
 
