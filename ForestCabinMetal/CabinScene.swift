@@ -17,6 +17,7 @@ func makeCabinObjects(
         return try SceneObject(
             mesh: boxMesh,
             model: rootTransform * makeTranslation(center) * makeScale(size),
+            baseColor: color,
             device: device,
             label: label
         )

@@ -55,7 +55,7 @@ final class SceneResources {
         tableDescriptor.maxSamplerStateBindCount = 0
         arguments = try device.makeArgumentTable(descriptor: tableDescriptor)
 
-        let meshes = [boxMesh, groundMesh]
+        let meshes = [boxMesh, roofMesh, groundMesh]
         let residencyDescriptor = MTLResidencySetDescriptor()
         residencyDescriptor.label = "Scene buffers"
         residencyDescriptor.initialCapacity = meshes.count * 2 + objects.count
