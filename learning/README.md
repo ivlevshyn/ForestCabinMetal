@@ -4,7 +4,7 @@
 
 You are starting graphics programming from zero and learning unfamiliar Swift syntax alongside Metal; see PROGRESS for your current background. You will build one Metal app from a clear-colored window to an advanced forest cabin diorama. You implement the code; ChatGPT teaches, helps you debug, and reviews your submitted commits.
 
-Each lesson is taught in manageable steps across messages, with accessible theory, worked examples, and explained Swift/MSL snippets with exact placement. The tutor teaches the current step, explains where its responsibilities belong, and pauses so the learner can apply it or ask for help. The teacher proactively keeps files focused and introduces small extractions before new code causes bloat. Understanding questions stay at the end of the entire lesson. Each step may include implementation checks; the final section collects the lesson checklist, questions, and commit/review directions. Experiments remain optional. See [the delivery template](templates/LESSON-DELIVERY.md).
+Each lesson is taught in manageable steps across messages, with accessible theory, worked examples, and explained Swift/MSL snippets with exact placement. The tutor teaches the current step, explains where its responsibilities belong, and pauses so the learner can apply it or ask for help. The teacher proactively keeps files focused and introduces small extractions before new code causes bloat. Each step may include implementation checks. The lesson ends with a checklist and commit/review directions, without a quiz. Experiments remain optional. See [the delivery template](templates/LESSON-DELIVERY.md).
 
 **Required session context:** [TEACHING](TEACHING.md), [PROGRESS](PROGRESS.md), the current lesson, and relevant parts of [PROJECT](PROJECT.md), [METAL4](METAL4.md), and [REFERENCE](REFERENCE.md). These are the working agreement. Every lesson repeats a short reminder so the agreement is not lost when files are attached individually.
 
@@ -25,8 +25,8 @@ The default is a native macOS Swift app with MTKView and handwritten MSL shaders
 1. Start from the previous reviewed checkpoint and give the tutor the branch/commit.
 2. Request the lesson. The tutor briefly outlines its steps and teaches the first step.
 3. Read the current step's theory and implementation, including exact placement and any focused refactor. Apply it and use its normal run checks.
-4. Ask for help or request the next step when ready. Understanding questions stay at the end of the entire lesson; there are no per-step quizzes or mandatory commits.
-5. After the final step, use the consolidated checklist and answer the end-of-lesson questions. Experiments are optional and do not affect completion.
+4. Ask for help or request the next step when ready. Intermediate commits are optional.
+5. After the final step, use the consolidated checklist to verify the implementation. Experiments are optional and do not affect completion.
 6. When the lesson work is ready, follow its final commit/push directions and request review of the exact SHA with evidence.
 7. Apply required corrections, request re-review, and record the verdict in PROGRESS. The tutor does not automatically begin the next lesson.
 
@@ -79,7 +79,7 @@ Default order is intentional. A future tutor may adapt it with you, but must rec
 
 ## Milestones worth reviewing together
 
-| Checkpoint | Visible outcome | Understanding to demonstrate |
+| Checkpoint | Visible outcome | Concepts covered |
 | --- | --- | --- |
 | 03 | Triangle and indexed panel | GPU stages, buffers, and byte layout |
 | 07 | Orbitable cabin blockout | Transforms, depth, camera, and geometry reuse |
@@ -98,13 +98,13 @@ Keep screenshots small and named clearly, such as `evidence/lesson-13/shadows-on
 
 After review, a small progress-only commit can record the reviewed code SHA. This avoids the impossible requirement to write a commit's own hash into its contents. If you change implementation after a successful review, identify whether the change affects that lesson's conclusions.
 
-Use these status values: **Not started**, **In progress**, **Ready for review**, **Changes needed**, **Awaiting evidence**, **Complete**, and **Skipped elective**. Only mark Complete after the tutor has reviewed sufficient behavior and understanding evidence. It is acceptable for that behavior evidence to be your recorded Mac run, as long as the reviewer identifies it honestly.
+Use these status values: **Not started**, **In progress**, **Ready for review**, **Changes needed**, **Awaiting evidence**, **Complete**, and **Skipped elective**. Only mark Complete after the tutor has checked the implementation and evidence of the required behavior. It is acceptable for that behavior evidence to be your recorded Mac run, as long as the reviewer identifies it honestly.
 
 ## Reusable prompts
 
 ### Begin or resume
 
-> Read learning/README.md, learning/TEACHING.md, learning/METAL4.md, learning/PROGRESS.md, and lesson [ID/path] in [repository URL] at [branch/SHA]. Use PROJECT and REFERENCE where needed. Inspect the current implementation and file responsibilities, outline the steps, then teach only the current step with thorough plain-language theory, worked examples, and explained snippets with exact placement. Include a small refactor before adding code if a file is accumulating unrelated responsibilities. Pause after the step so I can apply it or ask for help. Keep understanding questions until the end of the entire lesson, followed by commit/review directions. Do not edit my app for me.
+> Read learning/README.md, learning/TEACHING.md, learning/METAL4.md, learning/PROGRESS.md, and lesson [ID/path] in [repository URL] at [branch/SHA]. Use PROJECT and REFERENCE where needed. Inspect the current implementation and file responsibilities, outline the steps, then teach only the current step with thorough plain-language theory, worked examples, and explained snippets with exact placement. Include a small refactor before adding code if a file is accumulating unrelated responsibilities. Pause after the step so I can apply it or ask for help. Finish with the checklist and commit/review directions. Skip review questions. Do not edit my app for me.
 
 ### Ask for help
 
@@ -112,7 +112,7 @@ Use these status values: **Not started**, **In progress**, **Ready for review**,
 
 ### Request review
 
-> Review lesson [ID] at [code SHA] against [baseline SHA]. Here is my runtime evidence and understanding answers: [...]. Follow TEACHING and the lesson rubric. Identify what you inspected, what I reported, and what you personally ran. Give me a verdict and focused repair tasks for any blockers. Do not edit my files.
+> Review lesson [ID] at [code SHA] against [baseline SHA]. Here is my runtime evidence: [...]. Follow TEACHING and the lesson rubric. Identify what you inspected, what I reported, and what you personally ran. Give me a verdict and focused repair tasks for any blockers. Do not edit my files.
 
 ### When repository access is unavailable
 

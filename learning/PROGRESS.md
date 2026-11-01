@@ -5,7 +5,7 @@
 - Swift experience: learning Swift syntax alongside Metal; explain unfamiliar syntax.
 - Graphics experience at course start: none.
 - Project: interactive forest cabin diorama.
-- Teaching preference (updated 2026-10-16): teach lessons in manageable steps across messages, one coherent step per response by default, then pause for the learner to apply it or ask for help. Preserve thorough plain-language theory, worked examples, and explained Swift/MSL snippets with exact placement. Keep understanding questions at the end of the entire lesson; steps may include implementation/run checks. Give the consolidated checklist and commit/review directions after the final step. Experiments remain optional; hints-first is opt-in; no per-step quizzes or mandatory commits. Proactively inspect file responsibilities and teach small extractions before files become bloated, as Renderer.swift did before lesson 05. This replaces single-message delivery; the learner still applies and runs the code.
+- Teaching preference (updated 2026-11-01): Teach one coherent step per response, with thorough plain-language theory, worked examples, explained Swift/MSL snippets with exact placement, and a short run check. Pause for the learner to apply the code. End with the implementation checklist and commit/review directions. Omit end-of-lesson review questions and answer submissions. Experiments are optional, hints-first is opt-in, and intermediate commits are optional. Inspect file responsibilities and teach small extractions before files become bloated.
 - Mac chip: Apple M5 Max (learner-reported).
 - RAM: 48 GB (learner-reported).
 - macOS version: 27.0.1 (learner-reported).
@@ -19,12 +19,12 @@
 ## Current position
 
 - Current lesson: 07.
-- Current task: 07.1–07.5 Complete at the learner's explicit request after implementation, source review, and learner-reported working behavior. Two required source fixes remain documented in the latest handoff.
-- Last reviewed code SHA: 17b26c23cc774bc8078defef358c81dee0f7df55.
-- Current code SHA: 17b26c23cc774bc8078defef358c81dee0f7df55 (this progress-only update does not change the reviewed implementation).
-- Next action: wait for the learner to request further work. Surface the two recorded source fixes before beginning lesson 08 (normals and sunlight); app edits were not authorized in this completion update.
-- Current blocker: the box helper drops its color argument, and the residency list omits the roof mesh. The learner explicitly chose “Update progress only; record both issues” and requested lesson 07 be marked Complete with these issues outstanding.
-- Evidence location: this lesson 07 teaching/completion conversation, 2026-10-25 (Europe/Warsaw). The learner reported that everything works as expected and requested a completion commit. The reviewer inspected the submitted source and baseline diff, type-checked the submitted Swift renderer-related files, and ran CPU geometry/layout/camera checks. No full-app build, Metal execution, screenshot inspection, or GPU-capture inspection was performed by the reviewer. No end-of-lesson understanding answers or screenshots were supplied.
+- Current task: Lesson 07 (07.1–07.5) complete. Lesson 08 (normals and sunlight) is not started.
+- Original lesson 07 review: 17b26c23cc774bc8078defef358c81dee0f7df55.
+- Current code checkpoint and source follow-up: 7e00e81dc598dc47b6c17e163a91a19c3719f7cd, which includes fix 10aa6b2535af5558cade8ce22233fa51872faaca.
+- Current blocker: none recorded. Both lesson 07 source findings are resolved.
+- Next action: resume with lesson 08 when requested.
+- Evidence: the learner reported working behavior for the original lesson 07 submission. The follow-up verified both fixes by inspecting the diff and merged source. No build or Metal run was performed for the follow-up.
 
 ## Review ledger
 
@@ -38,7 +38,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 04 | Move geometry with transforms and time | Complete | 030525fc7c06f6b2a5e24363f13cba59a1c53fb5 | 2026-10-12: source and baseline diff reviewed; no blocking source issues found. Learner reported everything works as expected. Mesh-preservation answer discussed; tutor explained the other answers. Marked Complete at the learner's explicit request without a further understanding answer. Reviewer did not build or execute Metal. |
 | 05 | Enter 3D with perspective and depth | Complete | 615e277068c1e07e9ca8257006b2eff0f3cd1a0d | 2026-10-16: source and baseline diff reviewed; bottom-face error corrected and re-reviewed, projection assertion restored, view sizing corrected. Learner correctly identified the model matrix and rejection under the less-depth rule after explanations, then confirmed completion and authorized this update. No detailed runtime/capture report supplied; reviewer did not build or execute the submitted app. |
 | 06 | Explore the cabin with an orbit camera | Complete | 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea | 2026-10-18: source and baseline diff reviewed; no required source fixes. Submitted CPU assertions and additional numeric camera checks passed. Learner reported expected behavior. Understanding answers reviewed with clarifications; closed at the learner's explicit request without the two further answers. Reviewer did not build or execute the full app. |
-| 07 | Build the cabin from reusable meshes | Complete | 17b26c23cc774bc8078defef358c81dee0f7df55 | 2026-10-25: source and baseline diff reviewed; submitted Swift type-check and CPU geometry/layout/camera checks passed. Learner reported expected behavior and explicitly requested completion. Two required fixes remain: forward box color and register roof residency. Learner chose progress-only recording; no app changes, screenshots, understanding answers, or reviewer Metal execution. |
+| 07 | Build the cabin from reusable meshes | Complete | 17b26c23cc774bc8078defef358c81dee0f7df55 | 2026-10-25: source and baseline diff reviewed; submitted Swift type-check and CPU geometry/layout/camera checks passed. Learner reported expected behavior and explicitly requested completion. Two source findings were open at this review. Both were corrected in `10aa6b2` and verified by source inspection on `7e00e81` on 2026-11-01. |
 | 08 | Give surfaces shape with sunlight | Not started | — | — |
 | 09 | Put wood, bark, and ground on surfaces | Not started | — | — |
 | 10 | Organize materials without building an engine | Not started | — | — |
@@ -80,7 +80,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 - Lesson 06: learner correctly explained that the cross product is perpendicular to both inputs and reversing its order flips right to left. Learner also correctly predicted that the box would be behind the camera with reversed forward subtraction, but named the wrong viewing direction. Tutor clarified that target − eye points toward the target (−Z for eye (0, 0, 5) and target at the origin), whereas eye − target points away (+Z). Learner attributed the scene's opposite movement to direction reversal in OrbitCamera and attributed avoiding the pole to a precondition. Tutor explained camera-relative subtraction, the pitch clamp preventing pole alignment during normal input, and a precondition detecting invalid geometry and stopping execution rather than repairing it. The learner explicitly requested completion without answering the two subsequent understanding checks. Reinforce these distinctions naturally; do not attribute tutor explanations to learner answers or require the unanswered checks before continuing.
 
-- Lesson 07: tutor explained shape versus placement versus appearance, sharing mesh buffers while keeping per-object uniforms independent, roof winding, panel offsets, and root × part transform composition. No end-of-lesson understanding answers were supplied; do not attribute the tutor's explanations to demonstrated learner answers. Reinforce these concepts naturally. The learner explicitly requested completion and a progress-only update while retaining the two known source fixes below.
+- Lesson 07: tutor explained shape versus placement versus appearance, sharing mesh buffers while keeping per-object uniforms independent, roof winding, panel offsets, and root × part transform composition. No end-of-lesson understanding answers were supplied; do not attribute the tutor's explanations to demonstrated learner answers. Reinforce these concepts naturally. The learner explicitly requested completion and a progress-only update with two findings open at the time. Both were subsequently fixed.
 
 ## Decisions and adaptations
 
@@ -95,12 +95,22 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 2026-10-16 | Close lesson 05 after final source fix, follow-up answers, and learner confirmation | Learner reported completion and authorized the progress update. Preserve the limits of runtime evidence; no GPU execution or capture verification by the reviewer is implied. |
 | 2026-10-16 | Teach lessons in steps across messages; questions remain at the lesson end | Explicit learner preference supersedes single-message delivery. Pause after each coherent step; no per-step quizzes or mandatory commits. |
 | 2026-10-16 | Prevent file bloat proactively | Inspect responsibilities before every implementation step; teach small extractions before adding unrelated code, preserving ownership and behavior. |
-
 | 2026-10-18 | Close lesson 06 after review and learner-reported working behavior without further understanding answers | Explicit learner request to mark the lesson done supersedes the provisional Awaiting evidence verdict. No required source fixes remain; preserve the distinction between learner answers, tutor explanations, CPU checks, and full-app runtime evidence. |
-
 | 2026-10-25 | Mark lesson 07 Complete at the learner's request; record two unresolved source fixes without app edits | Learner reported expected behavior, then explicitly selected “Update progress only; record both issues” after the reviewer identified missing box-color forwarding and missing roof residency. Preserve these findings and the limits of runtime/understanding evidence. |
+| 2026-11-01 | Omit end-of-lesson review questions | Finish with implementation checks, runtime evidence, and submission directions. This supersedes the question requirement recorded on 2026-10-16. |
 
 ## Latest session handoff
+
+On 2026-11-01, the tutor inspected the changes since the original lesson 07 review and the source on `main` at [`7e00e81`](https://github.com/ivlevshyn/ForestCabinMetal/commit/7e00e81dc598dc47b6c17e163a91a19c3719f7cd). [Fix `10aa6b2`](https://github.com/ivlevshyn/ForestCabinMetal/commit/10aa6b2535af5558cade8ce22233fa51872faaca) resolves both findings:
+
+1. The box helper in `CabinScene.swift` passes `baseColor: color` to `SceneObject`, so each box-shaped cabin part receives its configured color.
+2. `SceneResources.swift` includes `roofMesh` in the mesh list. Its vertex and index buffers are added to the residency set before the set is committed and attached to the queue.
+
+Verification was by source inspection. Lesson 07 remains Complete. The next lesson is 08, on normals and sunlight.
+
+## Original lesson 07 handoff (2026-10-25)
+
+The following records the original review at `17b26c2`, before the fixes above.
 
 Lesson 07, tasks 07.1–07.5, is recorded **Complete at the learner's explicit request** at reviewed code commit 17b26c23cc774bc8078defef358c81dee0f7df55, compared with baseline d78bbf74a02118f1d31992e45dee11ff58f69c12. The reviewed merge contains implementation commit fd62e4d1f8e543aab8139e019fea0c1d126e9b4f. Two required source fixes remain unresolved by the learner's explicit choice; completion is a learner-requested exception to the review criteria.
 
@@ -108,7 +118,7 @@ Teaching covered the cabin coordinate/dimension plan, reusable mesh/object separ
 
 File responsibilities: MeshBuffers.swift owns geometry upload and buffer/count representation; MeshGeometry.swift owns box, ground, and roof geometry plus triangle/quad builders; SceneObject.swift owns a mesh reference, model/color state, and a distinct uniform allocation; CabinScene.swift assembles ten cabin objects using shared geometry and root × part model matrices; SceneResources.swift prepares meshes, scene objects, argument table, and residency; Renderer.swift writes uniforms and draws the object list after its existing completion gate. GPUData.swift and Shaders.metal agree on model/view/projection/baseColor with 208-byte stride and baseColor offset 192. OrbitCamera.swift targets (0, 1.7, 0) at default distance 8. The cabin root is translation (0.5, 0, -0.3) × uniform scale 0.85; the ground is constructed separately.
 
-**Unresolved required source fixes — no app edits authorized:**
+**Source findings at the original review:**
 
 1. CabinScene.swift, nested box helper in makeCabinObjects: its color argument is never forwarded to SceneObject. Add `baseColor: color,` after the model argument. At the reviewed SHA, all nine box-shaped cabin parts therefore use SceneObject's default white color instead of their declared colors.
 2. SceneResources.swift, init(device:queue:): `let meshes = [boxMesh, groundMesh]` omits roofMesh. Include roofMesh so both roof vertex/index allocations are registered before residencySet.commit(). Retaining the roof buffers through scene objects does not establish GPU residency; apparently working output does not remove this requirement.
@@ -119,7 +129,7 @@ Verification personally executed on the submitted source: renderer-related Swift
 
 The learner's general runtime confirmation is the behavior evidence. No final understanding answers were supplied. After being told about both required source fixes, the learner explicitly selected “Update progress only; record both issues.” This commit therefore changes only PROGRESS, records Complete as requested, and leaves both source issues visible for follow-up. No further understanding-answer requirement was imposed.
 
-Next action: wait for the learner's request. Surface and resolve the two recorded source issues with the learner before beginning lesson 08; lesson 08 remains Not started. This progress-only commit does not change the reviewed code SHA.
+At that checkpoint, both findings were open and lesson 08 was not started. The latest handoff records their resolution.
 
 ## Previous lesson 06 handoff
 

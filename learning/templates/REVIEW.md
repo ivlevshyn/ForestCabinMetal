@@ -14,9 +14,7 @@
 
 Use this template after the learner submits the whole lesson work, not as a checkpoint after each snippet. For each finding, give category (required fix / learning follow-up / optional improvement), file and symbol, observation, consequence, and a focused correction. Include an explained code snippet and exact placement when useful; the learner applies and tests it. Praise specific correct reasoning when it helps reinforce learning. Assess whether changed files have clear responsibilities and whether focused extractions preserve ownership and behavior. Address concrete bloat or coupling without arbitrary line-count rules or speculative architecture. Do not invent issues to fill categories.
 
-## Understanding
-
-Use the grouped end-of-lesson answers and implemented work to assess the learner’s explanation of the relevant mechanisms. Ask for missing understanding evidence rather than assuming understanding from polished code. Do not require an experiment, extra variation, or independent extension; skipping these cannot affect the verdict.
+Base the verdict on the submitted implementation and evidence of its behavior. Ask for a specific observation if a required behavior is unclear. Review questions and written answers are outside the submission criteria.
 
 ## Verdict
 

@@ -4,7 +4,7 @@
 
 [Previous: 29](./29-temporal-antialiasing.md) · Main course complete. Optional: [31 ray tracing](./31-hybrid-ray-tracing.md) or [32 compilation](./32-pipeline-compilation-study.md).
 
-> Tutor: read [TEACHING](../TEACHING.md), [PROGRESS](../PROGRESS.md), [PROJECT](../PROJECT.md), and [METAL4](../METAL4.md). Use Metal 4 throughout. Teach this lesson in manageable steps across messages, with thorough plain-language theory, worked examples, and explained snippets with exact placement. Deliver the current step and pause before continuing. Keep understanding questions until the end of the entire lesson; no per-step quizzes or mandatory commits. Check file responsibilities before extending them and teach small extractions before code causes bloat. Follow [the delivery template](../templates/LESSON-DELIVERY.md).
+> Tutor: read [TEACHING](../TEACHING.md), [PROGRESS](../PROGRESS.md), [PROJECT](../PROJECT.md), and [METAL4](../METAL4.md). Use Metal 4 throughout. Teach this lesson in manageable steps across messages, with thorough plain-language theory, worked examples, and explained snippets with exact placement. Deliver the current step and pause before continuing. Finish with implementation checks and submission directions. Omit review questions. Intermediate commits are optional. Check file responsibilities before extending them and teach small extractions before code causes bloat. Follow [the delivery template](../templates/LESSON-DELIVERY.md).
 
 ## 1. Outcome and purpose
 
@@ -22,11 +22,11 @@ Advanced graphics work includes knowing when to disable a technique. Every appro
 
 Review the full frame dependency graph, memory lifetimes, color path, visibility paths, and temporal state. A clean checkout and reproducible camera presets make the project reviewable by someone who was not present during its creation.
 
-Tutor: expand every required concept above into a full, accessible explanation: meaning, purpose, mechanism, connection to existing code, and a worked example or boundary case. Explain unfamiliar Swift/MSL syntax and mathematical variables. These paragraphs are a coverage outline, not the entire theory lesson. Explain the concepts needed for each step and demonstrate predictions yourself; ask understanding questions only in the final section of the entire lesson.
+Tutor: expand every required concept above into a full, accessible explanation: meaning, purpose, mechanism, connection to existing code, and a worked example or boundary case. Explain unfamiliar Swift/MSL syntax and mathematical variables. These paragraphs are a coverage outline, not the entire theory lesson. Explain the concepts needed for each step and demonstrate predictions with a worked example.
 
 ## 4. Explained implementation walkthrough
 
-Use these task IDs to plan manageable teaching steps across messages. Deliver one coherent step at a time, grouping related tasks or splitting a large task as needed. Explain the theory and show clear Swift/MSL snippets with the actual file, type/function, add/replace action, insertion anchor, and dependencies. First check whether affected files have clear responsibilities; teach a focused extraction before adding code if needed. Include expected behavior and relevant implementation checks, then pause for the learner to apply the step or ask for help. Keep understanding questions and learner calculations until the end of the entire lesson; demonstrate predictions yourself in earlier steps. Do not require per-step commits or formal reviews. Exploratory changes and extra variations remain optional.
+Use these task IDs to plan manageable teaching steps across messages. Deliver one coherent step at a time, grouping related tasks or splitting a large task as needed. Explain the theory and show clear Swift/MSL snippets with the actual file, type/function, add/replace action, insertion anchor, and dependencies. First check whether affected files have clear responsibilities; teach a focused extraction before adding code if needed. Include expected behavior and relevant implementation checks, then pause for the learner to apply the step or ask for help. Demonstrate calculations as part of the walkthrough. Do not require per-step commits or formal reviews. Exploratory changes and extra variations remain optional.
 
 1. **Task 30.1.** Write the frame architecture: passes, formats, coordinate spaces, materials, argument-table bindings, residency/retention, allocator ownership, event completion, and GPU barriers. Explain each technique and identify actual MTL4 queue/encoder/compiler use rather than only a Metal 4 label.
 
@@ -52,9 +52,9 @@ Use [the debugging field guide](../DEBUGGING.md) to isolate one hypothesis. When
 
 Read only what resolves the current question. This completes the main course. Specialist electives are independent branches from this checkpoint, not graduation requirements.
 
-## 7. Practice, questions, and submission — after the whole lesson
+## 7. Practice and submission — after the whole lesson
 
-Present this consolidated section after the final teaching step, once all lesson theory and code have been explained. The learner may already have applied earlier steps. Collect all understanding questions here, along with the final checklist and submission directions; do not distribute quizzes across step boundaries.
+Present this consolidated section after the final teaching step, once all lesson theory and code have been explained. The learner may already have applied earlier steps. Give the final checklist and submission directions.
 
 ### Optional exploration — not required for completion
 
@@ -71,21 +71,13 @@ Offer these ideas only after the full theory and implementation walkthrough. If 
 - [ ] The learner explains the completed implementation and its design tradeoffs; an extra extension is optional.
 - [ ] All blocking capstone findings are resolved or explicitly scoped before calling the project finished.
 - [ ] Existing required behavior still works, or a deliberate replacement is explained.
-- [ ] I can explain the mechanism used in the lesson implementation.
-
-### Understanding questions
-
-- Which technique would you remove first on a slower device, and why?
-- Which new feature can you now design without asking for a finished implementation?
-
-Do not require exact textbook wording. Accept an explanation, example, or sketch; do not require an extra code change or experiment to demonstrate understanding.
 
 ### Evidence to submit
 
 - Exact lesson ID, task range, code commit SHA, and baseline SHA if available.
 - Relevant source changes and any surrounding configuration needed to understand them.
 - The runtime evidence named in this lesson: images, a short clip for motion, capture observations, or measurements as appropriate. Do not produce every kind of evidence when one is sufficient.
-- Answers to the end-of-lesson understanding questions and any known remaining limitation. No experiment report or invented debugging issue is required.
+- Any known limitations of the submitted implementation.
 
 The tutor must identify learner-reported runtime evidence separately from verification they personally performed. If code access is unavailable, attach the relevant files rather than relying on the repository URL.
 

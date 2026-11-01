@@ -4,7 +4,7 @@
 
 [Previous: 26](./26-environment-lighting.md) · [Next: 28](./28-volumetric-sunlight.md)
 
-> Tutor: read [TEACHING](../TEACHING.md), [PROGRESS](../PROGRESS.md), [PROJECT](../PROJECT.md), and [METAL4](../METAL4.md). Use Metal 4 throughout. Teach this lesson in manageable steps across messages, with thorough plain-language theory, worked examples, and explained snippets with exact placement. Deliver the current step and pause before continuing. Keep understanding questions until the end of the entire lesson; no per-step quizzes or mandatory commits. Check file responsibilities before extending them and teach small extractions before code causes bloat. Follow [the delivery template](../templates/LESSON-DELIVERY.md).
+> Tutor: read [TEACHING](../TEACHING.md), [PROGRESS](../PROGRESS.md), [PROJECT](../PROJECT.md), and [METAL4](../METAL4.md). Use Metal 4 throughout. Teach this lesson in manageable steps across messages, with thorough plain-language theory, worked examples, and explained snippets with exact placement. Deliver the current step and pause before continuing. Finish with implementation checks and submission directions. Omit review questions. Intermediate commits are optional. Check file responsibilities before extending them and teach small extractions before code causes bloat. Follow [the delivery template](../templates/LESSON-DELIVERY.md).
 
 ## 1. Outcome and purpose
 
@@ -22,11 +22,11 @@ SSAO estimates nearby occlusion from visible depth and normals. It cannot see hi
 
 Separate raw occlusion, edge-aware filtering, and lighting composition. Occlusion should primarily affect the chosen indirect diffuse component here, not multiply emission and every direct light. A position reconstruction test is a prerequisite for tuning an occlusion kernel.
 
-Tutor: expand every required concept above into a full, accessible explanation: meaning, purpose, mechanism, connection to existing code, and a worked example or boundary case. Explain unfamiliar Swift/MSL syntax and mathematical variables. These paragraphs are a coverage outline, not the entire theory lesson. Explain the concepts needed for each step and demonstrate predictions yourself; ask understanding questions only in the final section of the entire lesson.
+Tutor: expand every required concept above into a full, accessible explanation: meaning, purpose, mechanism, connection to existing code, and a worked example or boundary case. Explain unfamiliar Swift/MSL syntax and mathematical variables. These paragraphs are a coverage outline, not the entire theory lesson. Explain the concepts needed for each step and demonstrate predictions with a worked example.
 
 ## 4. Explained implementation walkthrough
 
-Use these task IDs to plan manageable teaching steps across messages. Deliver one coherent step at a time, grouping related tasks or splitting a large task as needed. Explain the theory and show clear Swift/MSL snippets with the actual file, type/function, add/replace action, insertion anchor, and dependencies. First check whether affected files have clear responsibilities; teach a focused extraction before adding code if needed. Include expected behavior and relevant implementation checks, then pause for the learner to apply the step or ask for help. Keep understanding questions and learner calculations until the end of the entire lesson; demonstrate predictions yourself in earlier steps. Do not require per-step commits or formal reviews. Exploratory changes and extra variations remain optional.
+Use these task IDs to plan manageable teaching steps across messages. Deliver one coherent step at a time, grouping related tasks or splitting a large task as needed. Explain the theory and show clear Swift/MSL snippets with the actual file, type/function, add/replace action, insertion anchor, and dependencies. First check whether affected files have clear responsibilities; teach a focused extraction before adding code if needed. Include expected behavior and relevant implementation checks, then pause for the learner to apply the step or ask for help. Demonstrate calculations as part of the walkthrough. Do not require per-step commits or formal reviews. Exploratory changes and extra variations remain optional.
 
 1. **Task 27.1.** Plan a non-circular order: a depth/normal prepass, AO/filter passes, then main lighting consuming AO is one option. Another stores indirect lighting for later composition. Record and enforce Metal 4 producer/consumer barriers for every link, preserve cutout coverage, and explain the bandwidth.
 
@@ -50,9 +50,9 @@ Use [the debugging field guide](../DEBUGGING.md) to isolate one hypothesis. When
 
 Read only what resolves the current question. A low-sample SSAO implementation is enough. Bent normals, GTAO, and temporal accumulation are optional later investigations.
 
-## 7. Practice, questions, and submission — after the whole lesson
+## 7. Practice and submission — after the whole lesson
 
-Present this consolidated section after the final teaching step, once all lesson theory and code have been explained. The learner may already have applied earlier steps. Collect all understanding questions here, along with the final checklist and submission directions; do not distribute quizzes across step boundaries.
+Present this consolidated section after the final teaching step, once all lesson theory and code have been explained. The learner may already have applied earlier steps. Give the final checklist and submission directions.
 
 ### Optional exploration — not required for completion
 
@@ -68,21 +68,13 @@ Offer these ideas only after the full theory and implementation walkthrough. If 
 - [ ] Contact shading is modest, controllable, and applied to an explicit lighting term.
 - [ ] Screen-edge and hidden-geometry limitations are demonstrated and documented.
 - [ ] Existing required behavior still works, or a deliberate replacement is explained.
-- [ ] I can explain the mechanism used in the lesson implementation.
-
-### Understanding questions
-
-- Why cannot SSAO replace the sun shadow map?
-- Why should an emissive window remain emissive inside an occluded region?
-
-Do not require exact textbook wording. Accept an explanation, example, or sketch; do not require an extra code change or experiment to demonstrate understanding.
 
 ### Evidence to submit
 
 - Exact lesson ID, task range, code commit SHA, and baseline SHA if available.
 - Relevant source changes and any surrounding configuration needed to understand them.
 - The runtime evidence named in this lesson: images, a short clip for motion, capture observations, or measurements as appropriate. Do not produce every kind of evidence when one is sufficient.
-- Answers to the end-of-lesson understanding questions and any known remaining limitation. No experiment report or invented debugging issue is required.
+- Any known limitations of the submitted implementation.
 
 The tutor must identify learner-reported runtime evidence separately from verification they personally performed. If code access is unavailable, attach the relevant files rather than relying on the repository URL.
 

@@ -29,14 +29,13 @@ Explain the purpose before the code and the important lines afterward. Complete 
 
 Describe the result, likely mistakes, and a short apply/run checklist for this step. Pause here so the learner can implement it, ask for help, or request the next step. Do not append the next step automatically. Do not require a specific acknowledgment word, a quiz, a commit, or a formal review at each boundary. Answer learner questions and debug as needed before resuming.
 
-## 6. Final step only: practice, questions, and submission
+## 6. Final step only: practice and submission
 
 After all teaching steps, provide:
 
 1. A consolidated checklist for the complete lesson.
 2. Optional exploration ideas if useful; no experiment report is required.
-3. All understanding questions together, with duplicates removed.
-4. Acceptance criteria and relevant runtime evidence to record.
-5. Commit/push directions and an exact-SHA review prompt.
+3. Acceptance criteria and relevant runtime evidence to record.
+4. Commit/push directions and an exact-SHA review prompt.
 
-Do not put understanding questions at the ends of earlier steps. Necessary setup and debugging questions remain allowed. Record the current step and implementation status when making a session handoff; reading a step does not prove it was implemented.
+Omit the review quiz and answer submission. Necessary setup and debugging questions remain allowed. Record the current step and implementation status when making a session handoff; reading a step does not prove it was implemented.
