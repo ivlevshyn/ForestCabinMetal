@@ -5,6 +5,9 @@ struct ContentView: View {
     @State private var resetID = 0
     @State private var cameraPreset: OrbitCamera.Preset = .baseline
     @State private var cameraRequestID = 0
+
+    @State private var sunAzimuthDegrees = Sunlight.defaultAzimuthDegrees
+    @State private var sunElevationDegrees = Sunlight.defaultElevationDegrees
     @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
@@ -37,13 +40,22 @@ struct ContentView: View {
                 
                 Text(animationPaused ? "Paused" : "Animating")
             }.padding()
-            
+
+            SunlightControls(
+                azimuthDegrees: $sunAzimuthDegrees,
+                elevationDegrees: $sunElevationDegrees
+            )
+            .padding(.horizontal)
+            .padding(.bottom)
+
             MetalView(
                 animationPaused: animationPaused,
                 resetID: resetID,
                 sceneActive: scenePhase == .active,
                 cameraPreset: cameraPreset,
-                cameraRequestID: cameraRequestID
+                cameraRequestID: cameraRequestID,
+                sunAzimuthDegrees: sunAzimuthDegrees,
+                sunElevationDegrees: sunElevationDegrees
             ).frame(minWidth: 320, minHeight: 240)
 
         }

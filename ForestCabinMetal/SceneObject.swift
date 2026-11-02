@@ -32,13 +32,29 @@ final class SceneObject {
 
     func writeUniforms(
         view: simd_float4x4,
-        projection: simd_float4x4
+        projection: simd_float4x4,
+        sunlight: Sunlight
     ) {
+        let direction = sunlight.unitDirectionToSun
+
         var data = GPUUniforms(
             model: model,
             view: view,
             projection: projection,
-            baseColor: baseColor
+            baseColor: baseColor,
+            normalMatrix: makeNormalMatrix(model),
+            sunDirectionAndAmbient: SIMD4<Float>(
+                direction.x,
+                direction.y,
+                direction.z,
+                sunlight.ambientFill
+            ),
+            sunColorAndIntensity: SIMD4<Float>(
+                sunlight.color.x,
+                sunlight.color.y,
+                sunlight.color.z,
+                sunlight.intensity
+            )
         )
 
         withUnsafeBytes(of: &data, { bytes in

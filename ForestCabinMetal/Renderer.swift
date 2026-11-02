@@ -32,6 +32,9 @@ class Renderer: NSObject, MTKViewDelegate {
     private var lastResetID = 0
 
     private var camera = OrbitCamera()
+
+    private var sunlight = Sunlight()
+
     private var lastCameraRequestID = 0
 
     private var scene: SceneResources?
@@ -46,6 +49,14 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func zoomCamera(scroll: Float) {
         camera.zoom(scroll: scroll)
+    }
+
+    func setSunAngles(
+        azimuthDegrees: Float,
+        elevationDegrees: Float
+    ) {
+        sunlight.azimuthDegrees = azimuthDegrees
+        sunlight.elevationDegres = elevationDegrees
     }
 
     func setCameraPreset(
@@ -114,7 +125,12 @@ class Renderer: NSObject, MTKViewDelegate {
         let view = camera.viewMatrix
 
         for object in scene.objects {
-            object.writeUniforms(view: view, projection: projection)
+            object
+                .writeUniforms(
+                    view: view,
+                    projection: projection,
+                    sunlight: sunlight
+                )
         }
     }
 
@@ -127,7 +143,7 @@ class Renderer: NSObject, MTKViewDelegate {
         arguments.setAddress(mesh.vertices.gpuAddress, index: 0)
         arguments.setAddress(uniforms.gpuAddress, index: 1)
 
-        encoder.setArgumentTable(arguments, stages: .vertex)
+        encoder.setArgumentTable(arguments, stages: [.vertex, .fragment])
 
         encoder.drawIndexedPrimitives(
             primitiveType: .triangle,

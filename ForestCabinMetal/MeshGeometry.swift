@@ -5,6 +5,24 @@ struct MeshData {
     var vertices: [GPUVertex] = []
     var indices: [UInt16] = []
 
+    private func faceNormal(
+        _ a: SIMD3<Float>,
+        _ b: SIMD3<Float>,
+        _ c: SIMD3<Float>
+    ) -> SIMD4<Float> {
+        let edgeAB = b - a
+        let edgeAC = c - a
+        let perpendicular = simd_cross(edgeAB, edgeAC)
+
+        precondition(
+            simd_length_squared(perpendicular) > 0,
+            "A face needs three non-collinear points."
+        )
+
+        let normal = simd_normalize(perpendicular)
+        return SIMD4<Float>(normal.x, normal.y, normal.z, 0)
+    }
+
     mutating func addTriangle(
         _ a: SIMD3<Float>,
         _ b: SIMD3<Float>,
@@ -13,12 +31,14 @@ struct MeshData {
     ) {
         precondition(vertices.count <= Int(UInt16.max) - 2)
         let base = UInt16(vertices.count)
+        let normal = faceNormal(a, b, c)
 
         for p in [a, b, c] {
             vertices.append(
                 GPUVertex(
                     position: SIMD4<Float>(p.x, p.y, p.z, 1),
-                    color: color
+                    color: color,
+                    normal: normal
                 )
             )
         }
@@ -35,12 +55,14 @@ struct MeshData {
     ) {
         precondition(vertices.count <= Int(UInt16.max) - 3)
         let base = UInt16(vertices.count)
+        let normal = faceNormal(a, b, c)
 
         for p in [a, b, c, d] {
             vertices.append(
                 GPUVertex(
                     position: SIMD4<Float>(p.x, p.y, p.z, 1),
-                    color: color
+                    color: color,
+                    normal: normal
                 )
             )
         }

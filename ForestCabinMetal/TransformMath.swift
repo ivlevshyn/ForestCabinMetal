@@ -10,6 +10,37 @@ func makeScale(_ scale: SIMD3<Float>) -> simd_float4x4 {
     ))
 }
 
+func makeNormalMatrix(
+    _ model: simd_float4x4
+) -> simd_float3x3 {
+    let linear = simd_float3x3(columns: (
+        SIMD3<Float>(
+            model.columns.0.x,
+            model.columns.0.y,
+            model.columns.0.z
+        ),
+        SIMD3<Float>(
+            model.columns.1.x,
+            model.columns.1.y,
+            model.columns.1.z
+        ),
+        SIMD3<Float>(
+            model.columns.2.x,
+            model.columns.2.y,
+            model.columns.2.z
+        )
+    ))
+
+    let determinant = linear.determinant
+
+    precondition(
+        determinant.isFinite && determinant != 0,
+        "The model transform must have an invertible linear part."
+    )
+
+    return linear.inverse.transpose
+}
+
 func makeTranslation(_ translation: SIMD3<Float>) -> simd_float4x4 {
     simd_float4x4(columns:(
         SIMD4<Float>(1, 0, 0, 0),

@@ -10,6 +10,9 @@ struct MetalView : NSViewRepresentable {
     var cameraPreset: OrbitCamera.Preset = .baseline
     var cameraRequestID: Int = 0
 
+    var sunAzimuthDegrees: Float = Sunlight.defaultAzimuthDegrees
+    var sunElevationDegrees: Float = Sunlight.defaultElevationDegrees
+
     func makeNSView(context: Context) -> MTKView{
         let view = CameraMTKView(
             frame: .zero,
@@ -51,6 +54,12 @@ struct MetalView : NSViewRepresentable {
             context.coordinator
                 .setCameraPreset(cameraPreset, requestID: cameraRequestID)
 
+            context.coordinator
+                .setSunAngles(
+                    azimuthDegrees: sunAzimuthDegrees,
+                    elevationDegrees: sunElevationDegrees
+                )
+
             view.isPaused = false
         } catch {
             print("Cannot prepare renderer: \(error)")
@@ -64,6 +73,12 @@ struct MetalView : NSViewRepresentable {
 
         context.coordinator
             .setCameraPreset(cameraPreset, requestID: cameraRequestID)
+
+        context.coordinator
+            .setSunAngles(
+                azimuthDegrees: sunAzimuthDegrees,
+                elevationDegrees: sunElevationDegrees
+            )
     }
     
     func makeCoordinator() -> Renderer {
