@@ -18,13 +18,13 @@
 
 ## Current position
 
-- Current lesson: 07.
-- Current task: Lesson 07 (07.1–07.5) complete. Lesson 08 (normals and sunlight) is not started.
-- Original lesson 07 review: 17b26c23cc774bc8078defef358c81dee0f7df55.
-- Current code checkpoint and source follow-up: 7e00e81dc598dc47b6c17e163a91a19c3719f7cd, which includes fix 10aa6b2535af5558cade8ce22233fa51872faaca.
-- Current blocker: none recorded. Both lesson 07 source findings are resolved.
-- Next action: resume with lesson 08 when requested.
-- Evidence: the learner reported working behavior for the original lesson 07 submission. The follow-up verified both fixes by inspecting the diff and merged source. No build or Metal run was performed for the follow-up.
+- Current lesson: 08.
+- Current task: Lesson 08 (08.1–08.5) complete. Lesson 09 (textures and samplers) is not started.
+- Reviewed code checkpoint: 40933f9fade1162139a5b18b75f58a12cb437da6 (`Add simple sunlight`).
+- Review baseline: 9822f50d33ecfdbcc39b423d11df46dd5dc6b7c3.
+- Current blocker: none. No required source fixes were found in the lesson 08 review.
+- Next action: wait for the learner to request lesson 09.
+- Evidence: the learner confirmed completion after each teaching step and explicitly requested that lesson 08 be marked Complete. Source review, submitted Swift type-checking, and CPU checks passed. No paired normal/lit images, detailed runtime checklist, or GPU capture were supplied. The reviewer did not run the app or execute Metal.
 
 ## Review ledger
 
@@ -39,7 +39,7 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 05 | Enter 3D with perspective and depth | Complete | 615e277068c1e07e9ca8257006b2eff0f3cd1a0d | 2026-10-16: source and baseline diff reviewed; bottom-face error corrected and re-reviewed, projection assertion restored, view sizing corrected. Learner correctly identified the model matrix and rejection under the less-depth rule after explanations, then confirmed completion and authorized this update. No detailed runtime/capture report supplied; reviewer did not build or execute the submitted app. |
 | 06 | Explore the cabin with an orbit camera | Complete | 4901d3ad56d1a24c4f24ac8741ae10bbfb938cea | 2026-10-18: source and baseline diff reviewed; no required source fixes. Submitted CPU assertions and additional numeric camera checks passed. Learner reported expected behavior. Understanding answers reviewed with clarifications; closed at the learner's explicit request without the two further answers. Reviewer did not build or execute the full app. |
 | 07 | Build the cabin from reusable meshes | Complete | 17b26c23cc774bc8078defef358c81dee0f7df55 | 2026-10-25: source and baseline diff reviewed; submitted Swift type-check and CPU geometry/layout/camera checks passed. Learner reported expected behavior and explicitly requested completion. Two source findings were open at this review. Both were corrected in `10aa6b2` and verified by source inspection on `7e00e81` on 2026-11-01. |
-| 08 | Give surfaces shape with sunlight | Not started | — | — |
+| 08 | Give surfaces shape with sunlight | Complete | 40933f9fade1162139a5b18b75f58a12cb437da6 | 2026-11-02: exact source and baseline diff reviewed; submitted Swift type-check and CPU layout/geometry/normal/sun checks passed. Learner confirmed the steps done and explicitly requested completion. No paired images or capture supplied; reviewer did not run the app or Metal. |
 | 09 | Put wood, bark, and ground on surfaces | Not started | — | — |
 | 10 | Organize materials without building an engine | Not started | — | — |
 | 11 | Generate a small forest clearing | Not started | — | — |
@@ -82,6 +82,8 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 
 - Lesson 07: tutor explained shape versus placement versus appearance, sharing mesh buffers while keeping per-object uniforms independent, roof winding, panel offsets, and root × part transform composition. No end-of-lesson understanding answers were supplied; do not attribute the tutor's explanations to demonstrated learner answers. Reinforce these concepts naturally. The learner explicitly requested completion and a progress-only update with two findings open at the time. Both were subsequently fixed.
 
+- Lesson 08: tutor explained face normals, sharp-edge vertex duplication, normal visualization, inverse-transpose transformation, normalized world-space Lambert lighting, the toward-sun sign convention, ambient fill as a placeholder, fragment-stage bindings, and azimuth/elevation controls. The learner confirmed the steps done and requested completion. No review questions or written answers were requested; do not attribute tutor explanations or reviewer CPU checks to demonstrated learner understanding. Reinforce these concepts naturally during texturing and later lighting work.
+
 ## Decisions and adaptations
 
 | Date | Decision | Reason / affected lessons |
@@ -100,6 +102,26 @@ Update only the rows you work on. Status is one of Not started / In progress / R
 | 2026-11-01 | Omit end-of-lesson review questions | Finish with implementation checks, runtime evidence, and submission directions. This supersedes the question requirement recorded on 2026-10-16. |
 
 ## Latest session handoff
+
+Lesson 08, tasks 08.1–08.5, is **Complete** at reviewed code commit [`40933f9`](https://github.com/ivlevshyn/ForestCabinMetal/commit/40933f9fade1162139a5b18b75f58a12cb437da6), compared with baseline `9822f50d33ecfdbcc39b423d11df46dd5dc6b7c3`. Review and this progress update are dated 2026-11-02. No required source fixes were found. The learner confirmed each step as done, then explicitly requested source review and completion; those general completion reports are the learner-provided behavior evidence. No detailed runtime checklist, paired normal/lit screenshots, video, validation log, or GPU capture was supplied. Completion does not imply that the reviewer observed those artifacts or ran the app.
+
+Teaching covered local face normals and vertex duplication at sharp edges (08.1), signed-normal RGB visualization (08.2), inverse-transpose world-space normals and the nonuniformly scaled roof comparison (08.3), Lambert sunlight with fragment-stage uniform access and ambient fill (08.4), and azimuth/elevation controls independent of the camera (08.5). No end-of-lesson review questions or written answers were required. Tutor explanations and reviewer calculations are not learner-demonstrated answers.
+
+**Inspected source:** the exact commit and its baseline diff for ContentView.swift, GPUData.swift, MeshGeometry.swift, MetalView.swift, Renderer.swift, SceneObject.swift, Shaders.metal, Sunlight.swift, SunlightControls.swift, and TransformMath.swift; surrounding MeshBuffers.swift, SceneResources.swift, CabinScene.swift, OrbitCamera.swift, CameraMTKView.swift, ForestCabinMetalApp.swift, and the Xcode project configuration were also inspected.
+
+**Implementation:** GPUVertex has position/color/normal with 48-byte stride and normal offset 32. GPUUniforms has 288-byte stride, normalMatrix at offset 208, sunDirectionAndAmbient at 256, and sunColorAndIntensity at 272; Swift and MSL field order agree. Triangle/quad builders calculate unit outward normals from their winding and retain separate face vertices. makeNormalMatrix extracts the model's linear 3×3 part, checks invertibility, and returns its inverse transpose. The vertex shader supplies world-space normals; the fragment shader normalizes them and uses `max(dot(N, L), 0)`, with L pointing toward the sun. The normal debug path remains available, with `showNormals = false` for the submitted lit default.
+
+Sunlight.swift owns the light model and degree-to-direction calculation; SunlightControls.swift owns the slider/reset layout, while ContentView owns its state. MetalView forwards initial and updated angles to Renderer. Defaults are 55° azimuth and 55° elevation, warm RGB (1, 0.95, 0.85), intensity 0.75, and ambient fill 0.15. Azimuth 0° points toward +Z, 90° toward +X; elevation spans horizon to overhead. The constant ambient fill is an artistic placeholder for indirect illumination, not simulated bounced light. Cast shadows remain outside lesson 08.
+
+The existing object-specific uniform allocations, stride-based allocation/copying, mesh residency (including the roof), resource retention, completion-gated CPU writes, and allocator reuse remain intact. Argument-table bindings are now visible to both vertex and fragment stages. New Swift files belong to the app's synchronized source group.
+
+**Verification personally executed:** all submitted app Swift files passed type-checking for the Swift 5/macOS 27 target. A scratch CPU harness compiled the submitted GPUData.swift, MeshGeometry.swift, TransformMath.swift, and Sunlight.swift and ran GPU-layout verification, existing projection/camera assertions, mesh counts/index validity, unit and outward face normals, per-triangle normal consistency, transformed-normal perpendicularity under rotation and nonuniform scaling, translation independence, correct versus naive normal transformation, and sun directions at cardinal azimuths and horizon/30°/overhead elevations. All passed. Earlier checks during teaching are separate from this submitted-source verification.
+
+The reviewer did not perform a full Xcode app build, launch the UI, execute Metal, or inspect a GPU capture. An attempted standalone shader compilation could not run because the local Metal Toolchain is unavailable; that is an environment limitation, not a submitted shader compile failure.
+
+This is a progress-only update. The reviewed implementation remains `40933f9fade1162139a5b18b75f58a12cb437da6`; no app files were edited. Lesson 09 remains **Not started**. Next action: wait for the learner to request lesson 09 (textures and samplers).
+
+## Previous lesson 07 follow-up (2026-11-01)
 
 On 2026-11-01, the tutor inspected the changes since the original lesson 07 review and the source on `main` at [`7e00e81`](https://github.com/ivlevshyn/ForestCabinMetal/commit/7e00e81dc598dc47b6c17e163a91a19c3719f7cd). [Fix `10aa6b2`](https://github.com/ivlevshyn/ForestCabinMetal/commit/10aa6b2535af5558cade8ce22233fa51872faaca) resolves both findings:
 
